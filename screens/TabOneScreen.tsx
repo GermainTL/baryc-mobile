@@ -5,7 +5,7 @@ import { Text, View } from '../components/Themed';
 import { getBarsFromApi } from "../helpers/API/BarsAPI.tsx";
 
 export default function TabOneScreen()  {
-  let [bars, setBars] = React.useState([{}])
+  const [bars, setBars] = React.useState([{}])
   useEffect(() => {
     getBarsFromApi().then((data) => setBars(data))
   },[])

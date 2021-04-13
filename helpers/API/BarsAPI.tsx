@@ -1,12 +1,12 @@
 import axios from "axios";
 import { BARYC_AWS_API_KEY } from "@env";
 
-export function getBarsFromApi() {
-    let path = "/bars";
-    var url =
+export async function getBarsFromApi() {
+    const path = "/bars";
+    const url =
         "https://f3n48sbbli.execute-api.eu-west-1.amazonaws.com/v1" + path;
-    var bars: Array<Object> = []
-    return axios
+    const bars: Object[] = []
+    return await axios
     .get(url, {
         headers: {
             'x-api-key': BARYC_AWS_API_KEY

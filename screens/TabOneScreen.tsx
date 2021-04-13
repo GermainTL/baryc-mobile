@@ -1,19 +1,25 @@
-import * as React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
+import { getBarsFromApi } from "../helpers/API/BarsAPI.tsx";
 
-export default function TabOneScreen() {
-  return (
+export default function TabOneScreen()  {
+  let [bars, setBars] = React.useState([{}])
+  useEffect(() => {
+    getBarsFromApi().then((data) => setBars(data))
+  },[])
+    return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bienvenue sur Baryc ! :)</Text>
-      <Image style={styles.images} source={require("../assets/images/beer.png")}/>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <FlatList
+          data={ bars }
+          renderItem={({ item }) => <Text>{ item.nom }</Text>}
+          keyExtractor={(item, index: number) => index}
+      />
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

@@ -4,14 +4,14 @@ export interface RootStackParamList {
 }
 
 export interface BottomTabParamList {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Map: undefined;
+  Bars: undefined;
 }
 
-export interface TabOneParamList {
-  TabOneScreen: undefined;
+export interface TabMapParamList {
+  TabMapScreen: undefined;
 }
 
-export interface TabTwoParamList {
-  TabTwoScreen: undefined;
+export interface TabBarsParamList {
+  TabBarsScreen: undefined;
 }

@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import * as React from 'react';
+import { FlatList, StyleSheet} from 'react-native';
 
 import { Text, View } from '~/components/Themed';
+import { Bar } from '~/components/Bar.tsx'
+import { useEffect } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
 
-export default function TabOneScreen()  {
+export default function TabBarsScreen() {
   const [bars, setBars] = React.useState([{}])
   useEffect(() => {
     getBarsFromApi().then((data) => setBars(data))
   },[])
-    return (
+  return (
     <View style={styles.container}>
       <FlatList
           data={ bars }
-          renderItem={({ item }) => <Text>{ item.nom }</Text>}
+          renderItem={({ item }) => <Bar bar={ item }/>}
           keyExtractor={(item, index: number) => index.toString()}
       />
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -27,18 +28,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  images:{
-
-    width : 100,
-    height : 100,
-  }
 });

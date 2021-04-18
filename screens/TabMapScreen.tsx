@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 
-import { Text, View } from '../components/Themed';
+import { Text, View } from '~/components/Themed';
 
-export default function TabTwoScreen() {
-  return (
+export default function TabMapScreen()  {
+    return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <Text>TODO : Add a map here</Text>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -27,4 +27,9 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  images:{
+
+    width : 100,
+    height : 100,
+  }
 });

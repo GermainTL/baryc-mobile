@@ -7,11 +7,17 @@
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "strict": true
-  },
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@": ["./node_modules"],
+      "~": ["."]
+      }
+     },
   "include": [
     "./**/*",
     "./*",
     ".eslintrc.js"
   ]
 }
+

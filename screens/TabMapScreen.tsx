@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 
-import { Text, View } from '../components/Themed';
-import { getBarsFromApi } from "../helpers/API/BarsAPI.tsx";
+import { Text, View } from '~/components/Themed';
 
-export default function TabOneScreen()  {
-  const [bars, setBars] = React.useState([{}])
-  useEffect(() => {
-    getBarsFromApi().then((data) => setBars(data))
-  },[])
+export default function TabMapScreen()  {
     return (
     <View style={styles.container}>
-      <FlatList
-          data={ bars }
-          renderItem={({ item }) => <Text>{ item.nom }</Text>}
-          keyExtractor={(item, index: number) => index}
-      />
+      <Text>TODO : Add a map here</Text>
     </View>
   );
 }

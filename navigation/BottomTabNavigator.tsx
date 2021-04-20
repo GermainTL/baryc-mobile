@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import Colors from '~/constants/Colors';
+import useColorScheme from '~/hooks/useColorScheme';
+import TabMapScreen from '~/screens/TabMapScreen';
+import TabBarsScreen from '~/screens/TabBarsScreen';
+import { BottomTabParamList, TabMapParamList, TabBarsParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -16,18 +16,18 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Map"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="Map"
+        component={TabMapNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="Bars"
+        component={TabBarsNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
@@ -44,30 +44,30 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const TabMapStack = createStackNavigator<TabMapParamList>();
 
-function TabOneNavigator() {
+function TabMapNavigator() {
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+    <TabMapStack.Navigator>
+      <TabMapStack.Screen
+        name="TabMapScreen"
+        component={TabMapScreen}
+        options={{ headerTitle: 'Map' }}
       />
-    </TabOneStack.Navigator>
+    </TabMapStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const TabBarsStack = createStackNavigator<TabBarsParamList>();
 
-function TabTwoNavigator() {
+function TabBarsNavigator() {
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+    <TabBarsStack.Navigator>
+      <TabBarsStack.Screen
+        name="TabBarsScreen"
+        component={TabBarsScreen}
+        options={{ headerTitle: 'Bars' }}
       />
-    </TabTwoStack.Navigator>
+    </TabBarsStack.Navigator>
   );
 }

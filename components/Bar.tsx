@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
     description: {
         marginTop: 6,
-        fontWeight: 300
+        fontWeight: "300"
     }
 })

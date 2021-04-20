@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, StyleSheet} from 'react-native';
+import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 
 import { Text, View } from '~/components/Themed';
 import { Bar } from '~/components/Bar.tsx'
@@ -8,18 +8,33 @@ import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
 
 export default function TabBarsScreen() {
   const [bars, setBars] = React.useState([{}])
+  const [isLoading, setIsLoading] = React.useState(true)
+
   useEffect(() => {
-    getBarsFromApi().then((data) => setBars(data))
+    getBarsFromApi().then((data) => {
+      setBars(data)
+      setIsLoading(false)
+    })
   },[])
-  return (
-    <View style={styles.container}>
-      <FlatList
-          data={ bars }
-          renderItem={({ item }) => <Bar bar={ item }/>}
-          keyExtractor={(item, index: number) => index.toString()}
-      />
-    </View>
-  );
+
+  if (isLoading) {
+    return (
+        <View style={ styles.container }>
+           <ActivityIndicator size="large"/>
+        </View>
+  )
+  } else {
+    return (
+        <View style={ styles.container }>
+            <FlatList
+              style={ styles.barsList }
+              data={ bars }
+              renderItem={({ item }) => <Bar bar={ item }/>}
+              keyExtractor={(item, index: number) => index.toString()}
+              />
+        </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -28,4 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  barsList: {
+    paddingTop: 20,
+    paddingBottom: 20,
+  }
 });

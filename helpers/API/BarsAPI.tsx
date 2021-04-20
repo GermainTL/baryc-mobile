@@ -1,6 +1,5 @@
 import axios from "axios";
 import { BARYC_AWS_API_KEY } from "@env";
-
 export async function getBarsFromApi() {
     const path = "/bars";
     const url =

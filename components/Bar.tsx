@@ -2,7 +2,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import * as React from 'react';
 import { Card, Rating } from 'react-native-elements'
 
-export interface Props {
+interface Props {
     bar: Object;
 }
 

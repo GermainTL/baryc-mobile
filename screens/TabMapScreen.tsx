@@ -14,9 +14,9 @@ export default class TabMapScreen extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     getBarsFromApi().then((data) => {
-      let markers = []
+      const markers = []
       for (const bar of data) {
         markers.push({
           coordinates: {
@@ -34,7 +34,7 @@ export default class TabMapScreen extends Component {
     })
   }
 
-  render() {
+  render(): JSX.Element {
     const { markers, isLoading } = this.state;
 
     return (
@@ -44,7 +44,7 @@ export default class TabMapScreen extends Component {
             showsUserLocation={ true }
         >
           {
-            !isLoading && (
+            isLoading === false && (
               markers.map((marker) => {
               return  (
                   <Marker

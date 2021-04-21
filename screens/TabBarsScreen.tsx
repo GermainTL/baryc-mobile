@@ -39,9 +39,10 @@ export default function TabBarsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 310,
   },
   barsList: {
     paddingTop: 20,

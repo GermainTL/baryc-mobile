@@ -1,35 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
-import { Text, View } from '~/components/Themed';
+import { parisLocalization } from "~/constants/GPSConstants.ts";
+import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
 
-export default function TabMapScreen()  {
+export default class TabMapScreen extends Component {
+  constructor(){
+    super();
+    this.state= {
+      markers: [],
+      isLoading: true
+    }
+  }
+
+  componentDidMount() {
+    getBarsFromApi().then((data) => {
+      let markers = []
+      for (const bar of data) {
+        markers.push({
+          coordinates: {
+            longitude: bar.coordinates[0],
+            latitude: bar.coordinates[1],
+          },
+          title: bar.nom,
+          key: bar.id
+        })
+      }
+      this.setState({
+        markers: markers,
+        isLoading: false
+      });
+    })
+  }
+
+  render() {
+    const { markers, isLoading } = this.state;
+
     return (
-    <View style={styles.container}>
-      <Text>TODO : Add a map here</Text>
-    </View>
-  );
+        <MapView
+            style={ styles.map }
+            initialRegion={ parisLocalization }
+            showsUserLocation={ true }
+        >
+          {
+            !isLoading && (
+              markers.map((marker) => {
+              return  (
+                  <Marker
+                      coordinate={ marker.coordinates }
+                      title={ marker.title }
+                      key={ marker.key }
+                  />
+              )
+             })
+            )
+          }
+        </MapView>
+    );
+  }
 }
 
 
 const styles = StyleSheet.create({
-  container: {
+  map: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 3,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  images:{
-
-    width : 100,
-    height : 100,
-  }
 });

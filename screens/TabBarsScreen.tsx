@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 
-import { Text, View } from '~/components/Themed';
+import { View } from '~/components/Themed';
 import { Bar } from '~/components/Bar.tsx'
 import { useEffect } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Icon } from "react-native-elements";
 
@@ -40,6 +40,7 @@ export default class TabMapScreen extends Component {
     const { markers, isLoading } = this.state;
 
     return (
+        <View style={{ flex: 1 }}>
         <MapView
             style={ styles.map }
             initialRegion={ parisLocalization }
@@ -61,6 +62,10 @@ export default class TabMapScreen extends Component {
             )
           }
         </MapView>
+        <TouchableOpacity style={ styles.searchButton }>
+          <Icon name="search-outline" reverse type="ionicon" color="white" reverseColor="black" style={ palette.iconShadow } />
+        </TouchableOpacity>
+        </View>
     );
   }
 }
@@ -73,4 +78,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 3,
   },
+  searchButton: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    color: "white",
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0, height: 10
+    },
+    shadowOpacity: 0.2,
+    elevation: 1
+  }
 });

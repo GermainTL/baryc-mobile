@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { Icon } from "react-native-elements";
 
 import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
+import { default as palette } from "~/constants/Colors.ts" ;
 
 export default class TabMapScreen extends Component {
   constructor(){
@@ -51,7 +53,9 @@ export default class TabMapScreen extends Component {
                       coordinate={ marker.coordinates }
                       title={ marker.title }
                       key={ marker.key }
-                  />
+                  >
+                    <Icon name="map-marker" type="font-awesome" color={ palette.barycOrangeLight } style={ palette.iconShadow }/>
+                  </Marker>
               )
              })
             )

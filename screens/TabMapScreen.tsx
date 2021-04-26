@@ -5,6 +5,7 @@ import { Icon, Card, SearchBar, ButtonGroup } from "react-native-elements";
 
 import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
+import { search } from "~/helpers/API/Geocoding.tsx";
 import palette from "~/constants/Colors.ts" ;
 
 export default class TabMapScreen extends Component {
@@ -72,6 +73,7 @@ export default class TabMapScreen extends Component {
     location.searchValue = searchText;
     locations[index] = location;
     this.setState({ locations});
+    search(this.state.locations[index].searchValue)
   }
 
   render(): JSX.Element {

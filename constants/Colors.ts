@@ -16,9 +16,10 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
   },
-  barycOrange: '#bf360c',
-  barycOrangeLight: '#f9683a',
-  barycOrangeDark: '#870000',
+  orange: '#bf360c',
+  orangeLight: '#f9683a',
+  orangeDark: '#870000',
+  grey: '#C4C4C4',
   iconShadow: { // Why is it so complicated to have an icon shadow ? Actually I don't know, I just copy/paste from here : https://github.com/oblador/react-native-vector-icons/issues/311
     shadowColor: 'black',
     shadowOpacity: 0.2,

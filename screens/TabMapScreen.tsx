@@ -1,38 +1,44 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, View, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ScrollView, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { Icon, Card, SearchBar, ButtonGroup } from "react-native-elements";
-
+import { Icon, ButtonGroup} from "react-native-elements";
 import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
-import { search } from "~/helpers/API/Geocoding.tsx";
-import palette from "~/constants/Colors.ts" ;
+import { geocode } from "~/helpers/API/Geocoder.tsx";
+import transportOptions from "~/constants/TransportOptions.tsx"
+import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
+
+const markerImage = require('~/assets/images/marker.png');
+
+const INITIAL_STATE = {
+  markers: [],
+  isLoading: true,
+  showSearchPanel: false,
+  locations: [
+    {
+      searchValue: '',
+      location: {
+        latitude: null,
+        longitude: null
+      },
+      options: []
+    },
+    {
+      searchValue: '',
+      location: {
+        latitude: null,
+        longitude: null
+      },
+      options: []
+    },
+  ],
+  selectedTransport: null,
+}
 
 export default class TabMapScreen extends Component {
   constructor(){
     super();
-    this.state= {
-      markers: [],
-      isLoading: true,
-      showSearchPanel: false,
-      locations: [
-          {
-            searchValue: '',
-            location: {
-              latitude: null,
-              longitude: null
-            }
-          },
-          {
-            searchValue: '',
-            location: {
-              latitude: null,
-              longitude: null
-            }
-          },
-      ],
-      selectedTransport: null
-    }
+    this.state = INITIAL_STATE
   }
 
   componentDidMount(): void {
@@ -63,66 +69,127 @@ export default class TabMapScreen extends Component {
     });
   }
 
-  updateSelectedOption(selectedOption): void {
-    this.setState({ selectedTransport: selectedOption})
+  updateSelectTransport(selectedTransport): void {
+    this.setState({ selectedTransport: selectedTransport})
   }
 
   handleSearch(searchText, index): void {
-    const locations = [ ...this.state.locations ];
-    const location = { ...locations[index] };
-    location.searchValue = searchText;
-    locations[index] = location;
-    this.setState({ locations});
-    search(this.state.locations[index].searchValue)
+    if (searchText === '') {
+      return
+    }
+    const locations = [ ...this.state.locations ]
+    const location = { ...locations[index] }
+    location.searchValue = searchText
+    locations[index] = location
+
+    this.setState({ locations: locations })
+
+    geocode(searchText).then((data) => {
+      const locations = [ ...this.state.locations ]
+      const location = { ...locations[index] }
+      location.options = data
+      locations[index] = location
+      this.setState({ locations: locations })
+    })
+  }
+
+  selectLocation(location: Object, index: Number): void {
+    const locations = [ ...this.state.locations ]
+    locations[index] = location
+    this.setState({ locations: locations })
+  }
+
+  clearLocation(index): void {
+    const locations = [ ...this.state.locations ]
+    locations[index] = INITIAL_STATE.locations[index]
+    this.setState({ locations: locations })
   }
 
   render(): JSX.Element {
-    const { markers, isLoading, showSearchPanel, selectedTransport } = this.state;
-    const transportOptions = ['walk', 'transport']
-    
+    const { markers, isLoading, showSearchPanel, selectedTransport, locations } = this.state
+
     return (
         <View style={ styles.container }>
-          <MapView
-              style={ styles.map }
-              initialRegion={ parisLocalization }
-              showsUserLocation={ true }
-          >
-            {
-              isLoading === false && (
-                markers.map((marker) => {
-                return  (
-                    <Marker
-                        coordinate={ marker.coordinates }
-                        title={ marker.title }
-                        key={ marker.key }
-                    >
-                      <Icon name="map-marker" type="font-awesome" color={ palette.barycOrangeLight } style={ palette.iconShadow }/>
-                    </Marker>
+          {
+            showSearchPanel === false &&
+            <MapView
+                style={styles.map}
+                initialRegion={parisLocalization}
+                showsUserLocation={true}
+            >
+              {
+                isLoading === false && (
+                    markers.map((marker) => {
+                      return (
+                          <Marker
+                              coordinate={ marker.coordinates }
+                              title={ marker.title }
+                              key={ marker.key }
+                          >
+                              <Image source={ markerImage } style={{ height: 20, width: 20 }}/>
+                          </Marker>
+                      )
+                    })
                 )
-               })
-              )
-            }
-          </MapView>
+              }
+            </MapView>
+          }
 
-          <TouchableOpacity style={ styles.searchButton } onPress={() => this.togglePanel() }>
-            <Icon name="search-outline" reverse type="ionicon" color="white" reverseColor="black"/>
+          <TouchableOpacity
+              style={ styles.searchButton }
+              onPress={() => this.togglePanel() }
+          >
+            <Icon
+                name="search-outline"
+                reverse
+                type="ionicon"
+                color="white"
+                reverseColor="black"
+            />
           </TouchableOpacity>
 
           {
             showSearchPanel === true && (
-                <ScrollView onScroll={() => this.togglePanel()} style={ styles.searchPanel } scrollEventThrottle={0}>
-                  <Card containerStyle={ styles.card } >
-                    <View>
-                      <SearchBar onChangeText={(text) => this.handleSearch(text, 0) } value={ this.state.locations[0].searchValue } lightTheme containerStyle={ styles.searchBar } />
-                      <SearchBar onChangeText={(text) => this.handleSearch(text, 1) } value={ this.state.locations[1].searchValue } lightTheme containerStyle={ styles.searchBar } />
-                      <ButtonGroup
-                          onPress={(value) => this.updateSelectedOption(transportOptions[value]) }
-                          selectedIndex={ selectedTransport }
-                          buttons={ transportOptions }
+                  <ScrollView
+                      onScrollEndDrag={() => this.togglePanel()}
+                      contentContainerStyle={ styles.searchPanel }
+                      scrollEventThrottle={ 15 }
+                  >
+                    <Icon
+                        name="chevron-double-down"
+                        type="material-community"
+                        color="black"
+                       />
+                      <SearchBarWithOptions
+                          handleSearch={ this.handleSearch.bind(this) }
+                          clearLocation={ this.clearLocation.bind(this) }
+                          selectLocation={ this.selectLocation.bind(this) }
+                          placeholder={ "Your position" }
+                          value={ locations[0].searchValue }
+                          options={ locations[0].options }
+                          locationIndex={ 0 }
+                          containerStyle={{ zIndex: 2 }}
                       />
-                    </View>
-                  </Card>
-                </ScrollView>
+                      <SearchBarWithOptions
+                          handleSearch={ this.handleSearch.bind(this) }
+                          clearLocation={ this.clearLocation.bind(this) }
+                          selectLocation={ this.selectLocation.bind(this) }
+                          placeholder={ "Your friend's position" }
+                          value={ locations[1].searchValue }
+                          options={ locations[1].options }
+                          locationIndex={ 1 }
+                          containerStyle={{ zIndex: 1 }}
+                      />
+                      <ButtonGroup
+                          containerStyle={{ zIndex: 0 }}
+                          buttonContainerStyle={{ paddingTop: 8 }}
+                          onPress={(index) => this.updateSelectTransport(transportOptions[index].value) }
+                          selectedIndex={ selectedTransport }
+                          buttons={ transportOptions.map((transportOption) => {
+                            return transportOption.displayValue
+                          }) }
+                      />
+                  </ScrollView>
             )
           }
         </View>
@@ -134,7 +201,6 @@ export default class TabMapScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative"
   },
   map: {
     flex: 1,
@@ -158,18 +224,11 @@ const styles = StyleSheet.create({
     },
     searchPanel: {
       flex: 1,
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: Dimensions.get('window').width
-    },
-    card: {
-      marginLeft: 0,
-      marginRight: 0,
-    },
-    searchBar: {
+      height: "100%",
+      flexGrow: 1,
       backgroundColor: "white",
-      borderTopColor: "white",
-      borderBottomColor: "white"
     },
+    transportButtons: {
+      zIndex: 0,
+    }
 });

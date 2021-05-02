@@ -8,6 +8,7 @@ import useColorScheme from '~/hooks/useColorScheme';
 import TabMapScreen from '~/screens/TabMapScreen';
 import TabBarsScreen from '~/screens/TabBarsScreen';
 import { BottomTabParamList, TabMapParamList, TabBarsParamList } from '../types';
+import { Icon } from "react-native-elements";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -22,14 +23,14 @@ export default function BottomTabNavigator() {
         name="Map"
         component={TabMapNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) =>  <Icon name='map-outline' type='ionicon' color={color}/>
         }}
       />
       <BottomTab.Screen
         name="Bars"
         component={TabBarsNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name='beer-outline' type='ionicon' color={color}/>,
         }}
       />
     </BottomTab.Navigator>

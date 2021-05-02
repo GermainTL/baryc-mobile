@@ -1,9 +1,9 @@
 import axios from "axios";
-import { BARYC_AWS_API_KEY } from "@env";
+import { BARYC_AWS_API_KEY, HTTPS_PROTOCOL } from "@env";
 export async function getBarsFromApi() {
     const path = "/bars";
     const url =
-        "https://f3n48sbbli.execute-api.eu-west-1.amazonaws.com/v1" + path;
+        HTTPS_PROTOCOL + "f3n48sbbli.execute-api.eu-west-1.amazonaws.com/v1" + path;
     return await axios
     .get(url, {
         headers: {

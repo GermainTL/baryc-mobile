@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { FlatList, StyleSheet, ActivityIndicator, SafeAreaView, View } from 'react-native';
 
-import { Text, View } from '~/components/Themed';
 import { Bar } from '~/components/Bar.tsx'
 import { useEffect } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
@@ -25,23 +24,24 @@ export default function TabBarsScreen() {
   )
   } else {
     return (
-        <View style={ styles.container }>
+        <SafeAreaView style={ styles.container }>
             <FlatList
               style={ styles.barsList }
               data={ bars }
               renderItem={({ item }) => <Bar bar={ item }/>}
               keyExtractor={(item, index: number) => index.toString()}
               />
-        </View>
+        </SafeAreaView>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 310,
   },
   barsList: {
     paddingTop: 20,

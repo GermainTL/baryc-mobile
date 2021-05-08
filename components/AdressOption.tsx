@@ -6,7 +6,7 @@ export default class AdressOption extends Component {
     formatLocation(): Object {
         return {
             searchValue: this.props.option.item.properties.label,
-            location: {
+            GPSPosition: {
                 latitude: this.props.option.item.geometry.coordinates[0],
                 longitude: this.props.option.item.geometry.coordinates[1]
             },

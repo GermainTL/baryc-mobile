@@ -27,5 +27,15 @@ export default {
     shadowOffset: {
       width: 0, height: 3
     }
-  }
+  },
+  polygonColors: [
+    {
+      fillColor: 'rgba(106, 183, 255, 0.16)',
+      strokeColor: 'rgba(30, 136, 229, 0.5)',
+    },
+    {
+      fillColor: "rgba(249, 104, 58, 0.16)",
+      strokeColor: "rgba(191, 54, 12, 0.5)",
+    }
+  ]
 };

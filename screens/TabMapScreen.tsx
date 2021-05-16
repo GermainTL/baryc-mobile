@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView, Image } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { Icon, ButtonGroup} from "react-native-elements";
+import MapView, { Marker, Polygon } from 'react-native-maps';
+import { Icon, ButtonGroup, Button } from "react-native-elements";
 import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
+import { getIsochronesCoordinates } from "~/helpers/API/NavitiaAPI.tsx";
 import { geocode } from "~/helpers/API/Geocoder.tsx";
 import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
+import palette from "~/constants/Colors.ts";
 
 const markerImage = require('~/assets/images/marker.png');
 
@@ -17,7 +19,7 @@ const INITIAL_STATE = {
   locations: [
     {
       searchValue: '',
-      location: {
+      GPSPosition: {
         latitude: null,
         longitude: null
       },
@@ -25,7 +27,7 @@ const INITIAL_STATE = {
     },
     {
       searchValue: '',
-      location: {
+      GPSPosition: {
         latitude: null,
         longitude: null
       },
@@ -33,6 +35,9 @@ const INITIAL_STATE = {
     },
   ],
   selectedTransport: null,
+  isochronesCoordinates: [
+      [],
+  ]
 }
 
 export default class TabMapScreen extends Component {
@@ -106,7 +111,7 @@ export default class TabMapScreen extends Component {
   }
 
   render(): JSX.Element {
-    const { markers, isLoading, showSearchPanel, selectedTransport, locations } = this.state
+    const { markers, isLoading, showSearchPanel, selectedTransport, locations, isochronesCoordinates } = this.state
 
     return (
         <View style={ styles.container }>
@@ -130,6 +135,20 @@ export default class TabMapScreen extends Component {
                           </Marker>
                       )
                     })
+                )
+              }
+              {
+                isochronesCoordinates[0].length > 0 && (
+                   isochronesCoordinates.map((isochroneCoordinates, isochroneCoordinatesIndex) => {
+                     return (
+                      isochroneCoordinates.map((multiPolygon, multiPolygonIndex) => {
+                        return (
+                            <Polygon key={ multiPolygonIndex } coordinates={ multiPolygon[0] } strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
+                                     strokeWidth={ 3 } fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
+                        )
+                      })
+                     )
+                   })
                 )
               }
             </MapView>
@@ -188,6 +207,21 @@ export default class TabMapScreen extends Component {
                           buttons={ transportOptions.map((transportOption) => {
                             return transportOption.displayValue
                           }) }
+                      />
+                      <Button
+                          title="search"
+                          onPress={() => {
+                            for (const index in locations) {
+                              if (locations[index].GPSPosition.latitude !== null) {
+                                getIsochronesCoordinates(30, locations[index].GPSPosition)
+                                    .then((newIsochronesCoordinates) => {
+                                      const shadowIsochronesCoordinates = [ ...this.state.isochronesCoordinates ]
+                                      shadowIsochronesCoordinates[index] = newIsochronesCoordinates
+                                      this.setState({ isochronesCoordinates: shadowIsochronesCoordinates })
+                                    })
+                              }
+                            }
+                          }}
                       />
                   </ScrollView>
             )

@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView, Image } from 'react-native';
-import MapView, { Marker, Polygon } from 'react-native-maps';
 import { Icon, ButtonGroup, Button } from "react-native-elements";
-import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
 import { getIsochronesCoordinates } from "~/helpers/API/NavitiaAPI.tsx";
 import { geocode } from "~/helpers/API/Geocoder.tsx";
 import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
+import Map from "~/components/Map.tsx";
 import palette from "~/constants/Colors.ts";
-
-const markerImage = require('~/assets/images/marker.png');
 
 const INITIAL_STATE = {
   markers: [],
@@ -117,41 +114,11 @@ export default class TabMapScreen extends Component {
         <View style={ styles.container }>
           {
             showSearchPanel === false &&
-            <MapView
-                style={styles.map}
-                initialRegion={parisLocalization}
-                showsUserLocation={true}
-            >
-              {
-                isLoading === false && (
-                    markers.map((marker) => {
-                      return (
-                          <Marker
-                              coordinate={ marker.coordinates }
-                              title={ marker.title }
-                              key={ marker.key }
-                          >
-                              <Image source={ markerImage } style={{ height: 20, width: 20 }}/>
-                          </Marker>
-                      )
-                    })
-                )
-              }
-              {
-                isochronesCoordinates[0].length > 0 && (
-                   isochronesCoordinates.map((isochroneCoordinates, isochroneCoordinatesIndex) => {
-                     return (
-                      isochroneCoordinates.map((multiPolygon, multiPolygonIndex) => {
-                        return (
-                            <Polygon key={ multiPolygonIndex } coordinates={ multiPolygon[0] } strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
-                                     strokeWidth={ 3 } fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
-                        )
-                      })
-                     )
-                   })
-                )
-              }
-            </MapView>
+            <Map
+              isLoading={ isLoading }
+              markers={ markers }
+              isochronesCoordinates={ isochronesCoordinates }
+            />
           }
 
           <TouchableOpacity

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { API_TOKEN_NAVITIA, HTTPS_PROTOCOL } from "@env";
+import { reformatCoordinates } from "../CoordinatesHelper.tsx";
 
-async function getIsochronesCoordinates(minutes: Number, coordinates: Object) {
+async function getIsochroneCoordinates(minutes: Number, coordinates: Object) {
 const urlNavitia =
     `${HTTPS_PROTOCOL}api.navitia.io/v1/coverage/fr-idf/isochrones?from=${coordinates.latitude};${coordinates.longitude}&min_duration=0&max_duration=${minutes * 60}`
 
@@ -13,8 +14,8 @@ const urlNavitia =
         })
         .then((response) =>
             ({
-                reformattedCoordinates: reformatCoordinates(response.data.isochrones[0].geojson.coordinates), // useful for drawing multiPolygons
-                coordinates: response.data.isochrones[0].geojson.coordinates // useful for intersection compute
+                coordinates: response.data.isochrones[0].geojson.coordinates, // useful for intersection compute
+                reformattedCoordinates: reformatCoordinates(JSON.parse(JSON.stringify(response.data.isochrones[0].geojson.coordinates))), // useful for drawing multiPolygons
             })
         )
         .catch((error) => {
@@ -22,18 +23,19 @@ const urlNavitia =
         });
 }
 
-function reformatCoordinates(coordinates) {
-    for (const latLng in coordinates) {
-        if (isNaN(coordinates[latLng][0])) {
-            reformatCoordinates(coordinates[latLng])
-        } else {
-            coordinates[latLng] = {
-                latitude: coordinates[latLng][1],
-                longitude: coordinates[latLng][0]
+async function getIsochronesCoordinates(locations: any[]) {
+    return await new Promise(async resolve => {
+        let newIsochronesCoordinates: any[];
+        newIsochronesCoordinates = [];
+        for (const index in locations) {
+            if (locations[index].GPSPosition.latitude !== null) {
+                const newIsochroneCoordinates = await getIsochroneCoordinates(30, locations[index].GPSPosition)
+                newIsochronesCoordinates.push(newIsochroneCoordinates)
             }
         }
-    }
-    return coordinates
+        resolve(newIsochronesCoordinates)
+    })
 }
 
-export { reformatCoordinates, getIsochronesCoordinates }
+
+export { getIsochronesCoordinates }

@@ -8,6 +8,7 @@ import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
 import Map from "~/components/Map.tsx";
 import palette from "~/constants/Colors.ts";
+import { getIntersection } from "~/helpers/CoordinatesHelper.tsx";
 
 const INITIAL_STATE = {
   markers: [],
@@ -37,7 +38,8 @@ const INITIAL_STATE = {
       reformattedCoordinates: [],
       coordinates: []
     },
-  ]
+  ],
+  intersection: null
 }
 
 export default class TabMapScreen extends Component {
@@ -110,8 +112,26 @@ export default class TabMapScreen extends Component {
     this.setState({ locations: locations })
   }
 
+  onSearchButtonPress(): void {
+    let newIntersection = null
+    let newIsochronesCoordinates = []
+
+    getIsochronesCoordinates(this.state.locations)
+      .then((isochronesCoordinates) => {
+        newIsochronesCoordinates = isochronesCoordinates
+        if (newIsochronesCoordinates.length > 1) {
+            getIntersection(newIsochronesCoordinates).then((intersection: any[]) => {
+              newIntersection = intersection
+            })
+          }
+        })
+      .then(() => {
+        this.setState({ isochronesCoordinates: newIsochronesCoordinates, intersection: newIntersection, showSearchPanel: false })
+      })
+  }
+
   render(): JSX.Element {
-    const { markers, isLoading, showSearchPanel, selectedTransport, locations, isochronesCoordinates } = this.state
+    const { markers, isLoading, showSearchPanel, selectedTransport, locations, isochronesCoordinates, intersection } = this.state
 
     return (
         <View style={ styles.container }>
@@ -121,6 +141,7 @@ export default class TabMapScreen extends Component {
               isLoading={ isLoading }
               markers={ markers }
               isochronesCoordinates={ isochronesCoordinates }
+              intersection={ intersection }
             />
           }
 
@@ -180,18 +201,7 @@ export default class TabMapScreen extends Component {
                       />
                       <Button
                           title="search"
-                          onPress={() => {
-                            for (const index in locations) {
-                              if (locations[index].GPSPosition.latitude !== null) {
-                                getIsochronesCoordinates(30, locations[index].GPSPosition)
-                                    .then((newIsochronesCoordinates) => {
-                                      const shadowIsochronesCoordinates = [ ...this.state.isochronesCoordinates ]
-                                      shadowIsochronesCoordinates[index] = newIsochronesCoordinates
-                                      this.setState({ isochronesCoordinates: shadowIsochronesCoordinates })
-                                    })
-                              }
-                            }
-                          }}
+                          onPress={() => this.onSearchButtonPress() }
                       />
                   </ScrollView>
             )

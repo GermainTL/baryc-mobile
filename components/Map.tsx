@@ -32,12 +32,35 @@ export default class Map extends Component {
                 this.props.isochronesCoordinates[0].reformattedCoordinates.length > 0 && (
                     this.props.isochronesCoordinates.map((isochroneCoordinates, isochroneCoordinatesIndex) => {
                         return (
-                            isochroneCoordinates.reformattedCoordinates.map((multiPolygon, multiPolygonIndex) => {
+                            isochroneCoordinates.reformattedCoordinates.map(multiPolygon => {
                                 return (
-                                    <Polygon key={ multiPolygonIndex } coordinates={ multiPolygon[0] }
-                                             strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
-                                             strokeWidth={ 3 }
-                                             fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
+                                    multiPolygon.map((polygon, index) => {
+                                        return (
+                                            <Polygon key={ index } coordinates={ polygon }
+                                                     strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
+                                                     strokeWidth={ 3 }
+                                                     zIndex={ 1 }
+                                                     fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
+                                        )
+                                    })
+                                )
+                            })
+                        )
+                    })
+                )
+            }
+            {
+                this.props.intersection !== null && (
+                    this.props.intersection.map((multiPolygon, multiPolygonIndex) => {
+                        return (
+                            multiPolygon.map((polygon, polygonIndex) => {
+                                return (
+                                    <Polygon key={ `${multiPolygonIndex}:${polygonIndex}` } coordinates={ polygon }
+                                        strokeColor={ 'white' }
+                                        strokeWidth={ 3 }
+                                        fillColor={ 'rgba(255,255,255,0.16)' }
+                                        zIndex={ 2 }
+                                    />
                                 )
                             })
                         )

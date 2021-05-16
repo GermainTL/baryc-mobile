@@ -33,7 +33,10 @@ const INITIAL_STATE = {
   ],
   selectedTransport: null,
   isochronesCoordinates: [
-      [],
+    {
+      reformattedCoordinates: [],
+      coordinates: []
+    },
   ]
 }
 

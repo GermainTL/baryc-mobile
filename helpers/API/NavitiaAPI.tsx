@@ -11,9 +11,12 @@ const urlNavitia =
                 Authorization: API_TOKEN_NAVITIA,
             },
         })
-        .then((response) => {
-            return reformatCoordinates(response.data.isochrones[0].geojson.coordinates);
-        })
+        .then((response) =>
+            ({
+                reformattedCoordinates: reformatCoordinates(response.data.isochrones[0].geojson.coordinates), // useful for drawing multiPolygons
+                coordinates: response.data.isochrones[0].geojson.coordinates // useful for intersection compute
+            })
+        )
         .catch((error) => {
             console.log(error);
         });

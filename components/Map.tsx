@@ -29,12 +29,12 @@ export default class Map extends Component {
                 )
             }
             {
-                this.props.isochronesCoordinates[0].length > 0 && (
+                this.props.isochronesCoordinates[0].reformattedCoordinates.length > 0 && (
                     this.props.isochronesCoordinates.map((isochroneCoordinates, isochroneCoordinatesIndex) => {
                         return (
-                            isochroneCoordinates.map((multiPolygon, multiPolygonIndex) => {
+                            isochroneCoordinates.reformattedCoordinates.map((multiPolygon, multiPolygonIndex) => {
                                 return (
-                                    <Polygon key={ multiPolygonIndex} coordinates={multiPolygon[0] }
+                                    <Polygon key={ multiPolygonIndex } coordinates={ multiPolygon[0] }
                                              strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
                                              strokeWidth={ 3 }
                                              fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>

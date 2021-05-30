@@ -50,8 +50,8 @@ export default class Map extends Component {
                 )
             }
             {
-                this.props.intersection !== null && (
-                    this.props.intersection.map((multiPolygon, multiPolygonIndex) => {
+                this.props.intersection !== null && this.props.intersection.reformattedCoordinates.length > 0 && (
+                    this.props.intersection.reformattedCoordinates.map((multiPolygon, multiPolygonIndex) => {
                         return (
                             multiPolygon.map((polygon, polygonIndex) => {
                                 return (

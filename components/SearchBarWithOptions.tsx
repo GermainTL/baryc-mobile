@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Options from "~/components/Options.tsx";
 import {  StyleSheet, View } from "react-native";
-import { SearchBar} from "react-native-elements";
-import palette from "~/constants/Colors.ts";
+import { SearchBar } from "react-native-elements";
 
 export default class SearchBarWithOptions extends Component {
     render(): JSX.Element {

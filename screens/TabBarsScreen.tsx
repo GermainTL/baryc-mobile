@@ -18,7 +18,7 @@ export default function TabBarsScreen() {
 
   if (isLoading) {
     return (
-        <View style={ styles.container }>
+        <View style={ styles.loaderContainer }>
            <ActivityIndicator size="large"/>
         </View>
   )
@@ -38,8 +38,8 @@ export default function TabBarsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 0,
+  loaderContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

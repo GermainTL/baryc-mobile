@@ -24,9 +24,10 @@ export default function TabBarsScreen() {
   )
   } else {
     return (
-        <SafeAreaView style={ styles.container }>
+        <SafeAreaView
+          style={ styles.safeAreaViewContainer }
+        >
             <FlatList
-              style={ styles.barsList }
               data={ bars }
               renderItem={({ item }) => <Bar bar={ item }/>}
               keyExtractor={(item, index: number) => index.toString()}
@@ -41,10 +42,8 @@ const styles = StyleSheet.create({
     flex: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 310,
   },
-  barsList: {
-    paddingTop: 20,
-    paddingBottom: 20,
-  }
+  safeAreaViewContainer: {
+    marginBottom: 10,
+  },
 });

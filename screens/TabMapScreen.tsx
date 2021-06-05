@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView, Image } from 'react-native';
 import { Icon, ButtonGroup, Button } from "react-native-elements";
-import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
-import { getIsochronesCoordinates } from "~/helpers/API/NavitiaAPI.tsx";
+import { getBarsFromApi, getMarkersFromBars } from "~/helpers/API/BarsAPI.tsx";
 import { geocode } from "~/helpers/API/Geocoder.tsx";
 import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
 import Map from "~/components/Map.tsx";
-import palette from "~/constants/Colors.ts";
-import { getIntersection } from "~/helpers/CoordinatesHelper.tsx";
+import { retrieveNewMapElements } from "~/helpers/CoordinatesHelper.tsx";
 
 const INITIAL_STATE = {
   markers: [],
@@ -49,18 +47,8 @@ export default class TabMapScreen extends Component {
   }
 
   componentDidMount(): void {
-    getBarsFromApi().then((data) => {
-      const markers = []
-      for (const bar of data) {
-        markers.push({
-          coordinates: {
-            longitude: bar.coordinates[0],
-            latitude: bar.coordinates[1],
-          },
-          title: bar.nom,
-          key: bar.id
-        })
-      }
+    getBarsFromApi().then((bars) => {
+      const markers = getMarkersFromBars(bars)
       this.setState({
         markers: markers,
         isLoading: false,
@@ -113,20 +101,14 @@ export default class TabMapScreen extends Component {
   }
 
   onSearchButtonPress(): void {
-    let newIntersection = null
-    let newIsochronesCoordinates = []
-
-    getIsochronesCoordinates(this.state.locations)
-      .then((isochronesCoordinates) => {
-        newIsochronesCoordinates = isochronesCoordinates
-        if (newIsochronesCoordinates.length > 1) {
-            getIntersection(newIsochronesCoordinates).then((intersection: any[]) => {
-              newIntersection = intersection
-            })
-          }
+    retrieveNewMapElements(this.state.locations)
+      .then((newMapElements) => {
+        this.setState({
+          isochronesCoordinates: newMapElements.newIsochronesCoordinates,
+          intersection: newMapElements.newIntersection,
+          markers: newMapElements.newMarkers || this.state.markers,
+          showSearchPanel: false
         })
-      .then(() => {
-        this.setState({ isochronesCoordinates: newIsochronesCoordinates, intersection: newIntersection, showSearchPanel: false })
       })
   }
 

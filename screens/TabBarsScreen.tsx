@@ -2,6 +2,7 @@ import * as React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator, SafeAreaView, View } from 'react-native';
 
 import { Bar } from '~/components/Bar.tsx'
+import BarycLoader from '~/components/BarycLoader.tsx'
 import { useEffect } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
 
@@ -18,9 +19,7 @@ export default function TabBarsScreen() {
 
   if (isLoading) {
     return (
-        <View style={ styles.loaderContainer }>
-           <ActivityIndicator size="large"/>
-        </View>
+        <BarycLoader style={ styles.loaderContainer }/>
   )
   } else {
     return (

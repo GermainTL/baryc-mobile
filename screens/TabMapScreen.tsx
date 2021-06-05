@@ -7,6 +7,7 @@ import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
 import Map from "~/components/Map.tsx";
 import { retrieveNewMapElements } from "~/helpers/CoordinatesHelper.tsx";
+import BarycLoader from "~/components/BarycLoader";
 
 const INITIAL_STATE = {
   markers: [],
@@ -117,8 +118,9 @@ export default class TabMapScreen extends Component {
 
     return (
         <View style={ styles.container }>
+          <BarycLoader visible={ isLoading } containerStyle={ styles.loaderContainer } type={ 'rotating' } />
           {
-            showSearchPanel === false &&
+            showSearchPanel === false && isLoading === false &&
             <Map
               isLoading={ isLoading }
               markers={ markers }
@@ -126,7 +128,6 @@ export default class TabMapScreen extends Component {
               intersection={ intersection }
             />
           }
-
           <TouchableOpacity
               style={ styles.searchButton }
               onPress={() => this.togglePanel() }
@@ -198,6 +199,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  loaderContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '33%',
+  },
   map: {
     flex: 1,
     alignItems: 'center',
@@ -219,6 +225,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     },
     searchPanel: {
+      zIndex: 3,
       flex: 1,
       height: "100%",
       flexGrow: 1,

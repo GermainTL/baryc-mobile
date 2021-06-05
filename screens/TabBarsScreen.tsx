@@ -1,48 +1,58 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator, SafeAreaView, View } from 'react-native';
-
 import { Bar } from '~/components/Bar.tsx'
 import BarycLoader from '~/components/BarycLoader.tsx'
-import { useEffect } from "react";
+import { Component } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
 
-export default function TabBarsScreen() {
-  const [bars, setBars] = React.useState([{}])
-  const [isLoading, setIsLoading] = React.useState(true)
+export default class TabBarsScreen extends Component {
+  state = {
+    bars: [],
+    isLoading: true
+  }
 
-  useEffect(() => {
-    getBarsFromApi().then((data) => {
-      setBars(data)
-      setIsLoading(false)
+  componentDidMount() {
+    getBarsFromApi().then((bars) => {
+      this.setState({
+        bars: bars,
+        isLoading: false,
+      })
     })
-  },[])
+  }
 
-  if (isLoading) {
+  render(): JSX.Element {
     return (
-        <BarycLoader style={ styles.loaderContainer }/>
-  )
-  } else {
-    return (
-        <SafeAreaView
-          style={ styles.safeAreaViewContainer }
-        >
-            <FlatList
-              data={ bars }
-              renderItem={({ item }) => <Bar bar={ item }/>}
-              keyExtractor={(item, index: number) => index.toString()}
-              />
-        </SafeAreaView>
+    <SafeAreaView
+        style={styles.safeAreaViewContainer}
+    >
+      <BarycLoader
+          visible={ this.state.isLoading }
+          containerStyle={ styles.loaderContainer }
+          type={ 'flowing' }
+      />
+      {
+        !this.state.isLoading && (
+          <FlatList
+          data={ this.state.bars }
+          renderItem={({item}) => <Bar bar={ item }/>}
+          keyExtractor={(item, index: number) => index.toString()}
+          />
+        )
+      }
+    </SafeAreaView>
     )
   }
 }
 
 const styles = StyleSheet.create({
   loaderContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '33%',
+    zIndex: 1000,
   },
   safeAreaViewContainer: {
     marginBottom: 10,
+    height: "100%"
   },
 });

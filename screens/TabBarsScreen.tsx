@@ -18,15 +18,16 @@ export default function TabBarsScreen() {
 
   if (isLoading) {
     return (
-        <View style={ styles.container }>
+        <View style={ styles.loaderContainer }>
            <ActivityIndicator size="large"/>
         </View>
   )
   } else {
     return (
-        <SafeAreaView style={ styles.container }>
+        <SafeAreaView
+          style={ styles.safeAreaViewContainer }
+        >
             <FlatList
-              style={ styles.barsList }
               data={ bars }
               renderItem={({ item }) => <Bar bar={ item }/>}
               keyExtractor={(item, index: number) => index.toString()}
@@ -37,14 +38,12 @@ export default function TabBarsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 0,
+  loaderContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 310,
   },
-  barsList: {
-    paddingTop: 20,
-    paddingBottom: 20,
-  }
+  safeAreaViewContainer: {
+    marginBottom: 10,
+  },
 });

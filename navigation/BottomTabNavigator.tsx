@@ -49,11 +49,10 @@ const TabMapStack = createStackNavigator<TabMapParamList>();
 
 function TabMapNavigator() {
   return (
-    <TabMapStack.Navigator>
+    <TabMapStack.Navigator screenOptions={{ headerShown: false }} >
       <TabMapStack.Screen
         name="TabMapScreen"
         component={TabMapScreen}
-        options={{ headerTitle: 'Map' }}
       />
     </TabMapStack.Navigator>
   );
@@ -63,11 +62,10 @@ const TabBarsStack = createStackNavigator<TabBarsParamList>();
 
 function TabBarsNavigator() {
   return (
-    <TabBarsStack.Navigator>
+    <TabBarsStack.Navigator screenOptions={{ headerShown: false }}>
       <TabBarsStack.Screen
         name="TabBarsScreen"
         component={TabBarsScreen}
-        options={{ headerTitle: 'Bars' }}
       />
     </TabBarsStack.Navigator>
   );

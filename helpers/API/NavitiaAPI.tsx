@@ -2,39 +2,43 @@ import axios from "axios";
 import { API_TOKEN_NAVITIA, HTTPS_PROTOCOL } from "@env";
 import { reformatCoordinates } from "../CoordinatesHelper.tsx";
 
-async function getIsochroneCoordinates(minutes: Number, coordinates: Object) {
-const urlNavitia =
-    `${HTTPS_PROTOCOL}api.navitia.io/v1/coverage/fr-idf/isochrones?from=${coordinates.latitude};${coordinates.longitude}&min_duration=0&max_duration=${minutes * 60}`
-
-    return await axios
-        .get(urlNavitia, {
-            headers: {
-                Authorization: API_TOKEN_NAVITIA,
-            },
-        })
-        .then((response) =>
-            ({
-                coordinates: response.data.isochrones[0].geojson.coordinates, // useful for intersection compute
-                reformattedCoordinates: reformatCoordinates(JSON.parse(JSON.stringify(response.data.isochrones[0].geojson.coordinates))), // useful for drawing multiPolygons
+function getIsochroneCoordinates(minutes: Number, coordinates: Object): Promise {
+    return new Promise( (resolve, reject) => {
+        const urlNavitia =
+            `${HTTPS_PROTOCOL}api.navitia.io/v1/coverage/fr-idf/isochrones?from=${coordinates.latitude};${coordinates.longitude}&min_duration=0&max_duration=${minutes * 60}`
+        axios
+            .get(urlNavitia, {
+                headers: {
+                    Authorization: API_TOKEN_NAVITIA,
+                },
             })
-        )
-        .catch((error) => {
-            console.log(error);
-        });
+            .then((response) =>
+                resolve({
+                    coordinates: response.data.isochrones[0].geojson.coordinates, // useful for intersection compute
+                    reformattedCoordinates: reformatCoordinates(JSON.parse(JSON.stringify(response.data.isochrones[0].geojson.coordinates))), // useful for drawing multiPolygons
+                })
+            )
+            .catch((error) => {
+                reject(error);
+            });
+    })
 }
 
-async function getIsochronesCoordinates(locations: any[], travelTime: Number) {
-    return await new Promise(async resolve => {
-        let newIsochronesCoordinates: any[];
-        newIsochronesCoordinates = [];
+function getIsochronesCoordinates(locations: any[], travelTime: Number): Promise {
+    return new Promise( async resolve => {
+        const getIsochronesCoordinates = []
         for (const index in locations) {
             if (locations[index].GPSPosition.latitude !== null) {
-                getIsochroneCoordinates(travelTime, locations[index].GPSPosition).then((newIsochroneCoordinates) => {
-                    newIsochronesCoordinates.push(newIsochroneCoordinates)
-                })
+                getIsochronesCoordinates.push(getIsochroneCoordinates(travelTime, locations[index].GPSPosition))
             }
         }
-        resolve(newIsochronesCoordinates)
+        Promise.all(getIsochronesCoordinates) // Promise are never resolved, why ?
+            .then((newIsochronesCoordinates) => {
+                resolve(newIsochronesCoordinates)
+             })
+            .catch((error) => {
+                console.error(error);
+            });
     })
 }
 

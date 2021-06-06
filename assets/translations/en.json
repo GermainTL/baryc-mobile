@@ -1,0 +1,8 @@
+{
+  "TabMapScreen": {
+    "title": "Let's find a bar between our friends",
+    "yourPosition": "My position \uD83D\uDCCD",
+    "positionNumber": "Position friend N°%{positionNumber} \uD83D\uDCCD",
+    "search": "Look for a bar halfway"
+  }
+}

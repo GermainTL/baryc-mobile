@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView, Image } from 'react-native';
 import { Icon, ButtonGroup, Button } from "react-native-elements";
 import { getBarsFromApi, getMarkersFromBars } from "~/helpers/API/BarsAPI.tsx";
 import { geocode } from "~/helpers/API/Geocoder.tsx";
 import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
+import { retrieveNewMapElements } from "~/helpers/CoordinatesHelper.tsx"
 import Map from "~/components/Map.tsx";
-import { retrieveNewMapElements } from "~/helpers/CoordinatesHelper.tsx";
+import BarycLoader from "~/components/BarycLoader";
+import * as i18n from '~/helpers/i18n.js';
 
 const INITIAL_STATE = {
   markers: [],
@@ -45,6 +47,7 @@ export default class TabMapScreen extends Component {
     super();
     this.state = INITIAL_STATE
   }
+
 
   componentDidMount(): void {
     getBarsFromApi().then((bars) => {
@@ -117,8 +120,9 @@ export default class TabMapScreen extends Component {
 
     return (
         <View style={ styles.container }>
+          <BarycLoader visible={ isLoading } containerStyle={ styles.loaderContainer } type={ 'rotating' } />
           {
-            showSearchPanel === false &&
+            showSearchPanel === false && isLoading === false &&
             <Map
               isLoading={ isLoading }
               markers={ markers }
@@ -126,7 +130,6 @@ export default class TabMapScreen extends Component {
               intersection={ intersection }
             />
           }
-
           <TouchableOpacity
               style={ styles.searchButton }
               onPress={() => this.togglePanel() }
@@ -156,7 +159,7 @@ export default class TabMapScreen extends Component {
                           handleSearch={ this.handleSearch.bind(this) }
                           clearLocation={ this.clearLocation.bind(this) }
                           selectLocation={ this.selectLocation.bind(this) }
-                          placeholder={ "Your position" }
+                          placeholder={ i18n.t('TabMapScreen.myPosition') }
                           value={ locations[0].searchValue }
                           options={ locations[0].options }
                           locationIndex={ 0 }
@@ -166,7 +169,7 @@ export default class TabMapScreen extends Component {
                           handleSearch={ this.handleSearch.bind(this) }
                           clearLocation={ this.clearLocation.bind(this) }
                           selectLocation={ this.selectLocation.bind(this) }
-                          placeholder={ "Your friend's position" }
+                          placeholder={ i18n.t('TabMapScreen.positionNumber', { positionNumber: 1 }) }
                           value={ locations[1].searchValue }
                           options={ locations[1].options }
                           locationIndex={ 1 }
@@ -182,7 +185,7 @@ export default class TabMapScreen extends Component {
                           }) }
                       />
                       <Button
-                          title="search"
+                          title={ i18n.t('TabMapScreen.search') }
                           onPress={() => this.onSearchButtonPress() }
                       />
                   </ScrollView>
@@ -197,6 +200,11 @@ export default class TabMapScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loaderContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '33%',
   },
   map: {
     flex: 1,
@@ -219,6 +227,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     },
     searchPanel: {
+      zIndex: 3,
       flex: 1,
       height: "100%",
       flexGrow: 1,

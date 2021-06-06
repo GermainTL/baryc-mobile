@@ -23,14 +23,15 @@ const urlNavitia =
         });
 }
 
-async function getIsochronesCoordinates(locations: any[]) {
+async function getIsochronesCoordinates(locations: any[], travelTime: Number) {
     return await new Promise(async resolve => {
         let newIsochronesCoordinates: any[];
         newIsochronesCoordinates = [];
         for (const index in locations) {
             if (locations[index].GPSPosition.latitude !== null) {
-                const newIsochroneCoordinates = await getIsochroneCoordinates(30, locations[index].GPSPosition)
-                newIsochronesCoordinates.push(newIsochroneCoordinates)
+                getIsochroneCoordinates(travelTime, locations[index].GPSPosition).then((newIsochroneCoordinates) => {
+                    newIsochronesCoordinates.push(newIsochroneCoordinates)
+                })
             }
         }
         resolve(newIsochronesCoordinates)

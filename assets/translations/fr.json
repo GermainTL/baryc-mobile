@@ -1,8 +1,11 @@
 {
   "TabMapScreen": {
-    "title": "Trouvons un bar entre nos amis",
+    "title": "Trouvons un bar !",
     "myPosition": "Ma position \uD83D\uDCCD",
     "positionNumber": "Position ami n°%{positionNumber} \uD83D\uDCCD",
-    "search": "Chercher un bar à mi-chemin"
+    "addFriend": "Ajouter un ami",
+    "search": "Trouver un bar à mi-chemin",
+    "travelTime": "Temps de trajet",
+    "meansOfTransport": "Moyen de transport"
   }
 }

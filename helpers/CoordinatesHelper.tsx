@@ -10,6 +10,7 @@ function getIntersection(isochronesCoordinates: any[]): Promise
             turfMultiPolygons.push(turf.multiPolygon(isochroneCoordinates.coordinates))
         }
         const intersection = computeIntersection(turfMultiPolygons)
+
         const rawCoordinates = JSON.parse(JSON.stringify(intersection.geometry.coordinates))
         const reformattedCoordinates =
             intersection !== null ? reformatCoordinates(intersection.geometry.coordinates) : null
@@ -39,13 +40,13 @@ function findBarsInPolygon(bars: any[], multiPolygonCoordinates: any[]): Promise
         })
 }
 
-function retrieveNewMapElements(locations: any[]): Promise {
+function retrieveNewMapElements(locations: any[], travelTime: Number): Promise {
     return new Promise(resolve => {
         let newIntersection = null
         let newIsochronesCoordinates = []
         let newMarkers = []
 
-        getIsochronesCoordinates(locations)
+        getIsochronesCoordinates(locations, travelTime)
             .then((isochronesCoordinates) => {
                 newIsochronesCoordinates = isochronesCoordinates
                 if (newIsochronesCoordinates.length > 1) {

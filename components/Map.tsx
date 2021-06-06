@@ -57,7 +57,7 @@ export default class Map extends Component {
                                 return (
                                     <Polygon key={ `${multiPolygonIndex}:${polygonIndex}` } coordinates={ polygon }
                                         strokeColor={ 'white' }
-                                        strokeWidth={ 3 }
+                                        strokeWidth={ 1 }
                                         fillColor={ 'rgba(255,255,255,0.16)' }
                                         zIndex={ 2 }
                                     />

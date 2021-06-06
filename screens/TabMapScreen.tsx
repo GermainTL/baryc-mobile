@@ -1,14 +1,17 @@
 import React, { Component, useContext } from 'react';
-import { StyleSheet, TouchableOpacity, View, ScrollView, Image } from 'react-native';
-import { Icon, ButtonGroup, Button } from "react-native-elements";
+import { StyleSheet, TouchableOpacity, View, ScrollView, Text } from 'react-native';
+import Dash from 'react-native-dash';
+import { Icon, ButtonGroup, Button, Slider } from "react-native-elements";
 import { getBarsFromApi, getMarkersFromBars } from "~/helpers/API/BarsAPI.tsx";
 import { geocode } from "~/helpers/API/Geocoder.tsx";
 import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
-import { retrieveNewMapElements } from "~/helpers/CoordinatesHelper.tsx"
+import { retrieveNewMapElements } from '~/helpers/CoordinatesHelper.tsx';
 import Map from "~/components/Map.tsx";
 import BarycLoader from "~/components/BarycLoader";
+import CoolSliderThumb from "~/components/CoolSliderThumb.tsx";
 import * as i18n from '~/helpers/i18n.js';
+import palette from "~/constants/Colors.ts" ;
 
 const INITIAL_STATE = {
   markers: [],
@@ -32,6 +35,7 @@ const INITIAL_STATE = {
       options: []
     },
   ],
+  travelTime: 30,
   selectedTransport: null,
   isochronesCoordinates: [
     {
@@ -60,11 +64,18 @@ export default class TabMapScreen extends Component {
   }
   
   togglePanel(): void {
-    this.setState((prevState) => {
+     this.setState((prevState) => {
       return {
         showSearchPanel: prevState.showSearchPanel !== true
       }
-    });
+    })
+  }
+
+  handleScrollOnPanel(event: Object): void {
+    const contentOffsetY = event.nativeEvent.contentOffset.y
+    if (contentOffsetY < -30 ) {
+      this.togglePanel()
+    }
   }
 
   updateSelectTransport(selectedTransport): void {
@@ -91,6 +102,19 @@ export default class TabMapScreen extends Component {
     })
   }
 
+  addLocation(): void {
+    const locations = [ ...this.state.locations ]
+    locations.push({
+      searchValue: '',
+      GPSPosition: {
+        latitude: null,
+        longitude: null
+      },
+      options: []
+    })
+    this.setState({ locations: locations })
+  }
+
   selectLocation(location: Object, index: Number): void {
     const locations = [ ...this.state.locations ]
     locations[index] = location
@@ -104,13 +128,18 @@ export default class TabMapScreen extends Component {
   }
 
   onSearchButtonPress(): void {
-    retrieveNewMapElements(this.state.locations)
+    this.setState({
+      isLoading: true
+    })
+
+    retrieveNewMapElements(this.state.locations, this.state.travelTime)
       .then((newMapElements) => {
         this.setState({
           isochronesCoordinates: newMapElements.newIsochronesCoordinates,
           intersection: newMapElements.newIntersection,
           markers: newMapElements.newMarkers || this.state.markers,
-          showSearchPanel: false
+          showSearchPanel: false,
+          isLoading: false
         })
       })
   }
@@ -146,35 +175,83 @@ export default class TabMapScreen extends Component {
           {
             showSearchPanel === true && (
                   <ScrollView
-                      onScrollEndDrag={() => this.togglePanel()}
+                      onScrollEndDrag={ this.handleScrollOnPanel.bind(this) }
                       contentContainerStyle={ styles.searchPanel }
                       scrollEventThrottle={ 15 }
                   >
                     <Icon
                         name="chevron-double-down"
                         type="material-community"
-                        color="black"
-                       />
-                      <SearchBarWithOptions
-                          handleSearch={ this.handleSearch.bind(this) }
-                          clearLocation={ this.clearLocation.bind(this) }
-                          selectLocation={ this.selectLocation.bind(this) }
-                          placeholder={ i18n.t('TabMapScreen.myPosition') }
-                          value={ locations[0].searchValue }
-                          options={ locations[0].options }
-                          locationIndex={ 0 }
-                          containerStyle={{ zIndex: 2 }}
-                      />
-                      <SearchBarWithOptions
-                          handleSearch={ this.handleSearch.bind(this) }
-                          clearLocation={ this.clearLocation.bind(this) }
-                          selectLocation={ this.selectLocation.bind(this) }
-                          placeholder={ i18n.t('TabMapScreen.positionNumber', { positionNumber: 1 }) }
-                          value={ locations[1].searchValue }
-                          options={ locations[1].options }
-                          locationIndex={ 1 }
-                          containerStyle={{ zIndex: 1 }}
-                      />
+                        color="#C4C4C4"
+                        style={ styles.scrollDownIcon }
+                    />
+
+                    <Text style={ styles.title }> { i18n.t('TabMapScreen.title') }</Text>
+
+                    <Dash
+                        dashColor={ palette.orangeLight }
+                        style={[ styles.dash, { width: 2, height: 20 }]}
+                    />
+
+                    <View style={ styles.searchBars }>
+                      {
+                        locations.map((location, index) => {
+                          return (
+                              <SearchBarWithOptions
+                                  handleSearch={ this.handleSearch.bind(this) }
+                                  clearLocation={ this.clearLocation.bind(this) }
+                                  selectLocation={ this.selectLocation.bind(this) }
+                                  placeholder={ index === 0 ? i18n.t('TabMapScreen.myPosition') : i18n.t('TabMapScreen.positionNumber', { positionNumber: index }) }
+                                  isLastSearchBar={ index === locations.length - 1 }
+                                  value={ location.searchValue }
+                                  options={ location.options }
+                                  locationIndex={ index }
+                                  key={ index }
+                                  containerStyle={[{ zIndex: locations.length - index }, styles.searchBar]}
+                              />
+                          )
+                        })
+                      }
+                      {
+                        locations.length < 4 && (
+                          <TouchableOpacity style={ styles.addFriendBtn } onPress={ this.addLocation.bind(this) }>
+                            <Text style={ styles.addFriendBtnText }>+ { i18n.t('TabMapScreen.addFriend') }</Text>
+                          </TouchableOpacity>
+                        )
+                      }
+                    </View>
+
+                    <Dash
+                        dashColor={ palette.orangeLight }
+                        style={[ styles.dash, { width: 1, height: 30 }]}
+                    />
+
+                    <View style={ styles.searchParameter }>
+                      <View style={ styles.sliderContainer }>
+                        <Text style={ styles.parameterLabel }>{ i18n.t('TabMapScreen.travelTime') } :</Text>
+                        <Slider
+                            value={ this.state.travelTime }
+                            maximumValue={ 45 }
+                            minimumValue={ 5 }
+                            step={ 1 }
+                            onValueChange={(travelTime) => this.setState({ travelTime: travelTime })}
+                            style={{ marginLeft: 15, marginRight: 15, marginBottom: 0 }}
+                            trackStyle={{ height: 2, backgroundColor: 'transparent', marginBottom: 0  }}
+                            minimumTrackTintColor={ palette.orangeLight }
+                            thumbStyle={{ height: 10, width: 10, backgroundColor: 'white', borderColor: palette.grey, borderWidth: 0.32 }}
+                            thumbProps={{
+                              children: (
+                                  <CoolSliderThumb value={ this.state.travelTime }/>
+                              ),
+                            }}
+                        />
+                        <View style={ styles.sliderLegend }>
+                          <Text style={ styles.sliderLegentText }>5 min</Text>
+                          <Text style={ styles.sliderLegentText }>45 min</Text>
+                        </View>
+                      </View>
+
+                      <Text style={ styles.parameterLabel }>{ i18n.t('TabMapScreen.meansOfTransport') } :</Text>
                       <ButtonGroup
                           containerStyle={{ zIndex: 0 }}
                           buttonContainerStyle={{ paddingTop: 8 }}
@@ -183,11 +260,22 @@ export default class TabMapScreen extends Component {
                           buttons={ transportOptions.map((transportOption) => {
                             return transportOption.displayValue
                           }) }
-                      />
-                      <Button
-                          title={ i18n.t('TabMapScreen.search') }
-                          onPress={() => this.onSearchButtonPress() }
-                      />
+                        />
+                    </View>
+
+                    <Dash
+                        dashColor={ palette.orangeLight }
+                        style={[ styles.dash, { width: 1, height: 20 }]}
+                    />
+
+                    <Button
+                        raised={ true }
+                        title={ i18n.t('TabMapScreen.search') }
+                        titleStyle={ styles.submitButtonText }
+                        buttonStyle={ styles.submitButton }
+                        containerStyle={ styles.submitButtonContainer }
+                        onPress={() => this.onSearchButtonPress() }
+                    />
                   </ScrollView>
             )
           }
@@ -200,8 +288,10 @@ export default class TabMapScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
   },
   loaderContainer: {
+    zIndex: 1000,
     position: 'absolute',
     alignSelf: 'center',
     top: '33%',
@@ -226,14 +316,97 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     elevation: 1,
     },
+    addFriendBtn: {
+      position: 'absolute',
+      bottom: -20
+    },
+    addFriendBtnText: {
+      fontSize: 12,
+      fontWeight: "700",
+      color: palette.orangeLight,
+    },
     searchPanel: {
       zIndex: 3,
       flex: 1,
       height: "100%",
+      flexDirection: "column",
       flexGrow: 1,
       backgroundColor: "white",
     },
+    scrollDownIcon: {
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    dash: {
+      marginLeft: '50%',
+      marginBottom: 2,
+      flexDirection:'column'
+    },
+    title: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: palette.greyDark,
+      marginBottom: 10,
+      marginLeft: 10,
+      marginRight: 10,
+      textTransform: "uppercase",
+      textAlign: "center"
+    },
+    searchBars: {
+      borderColor: palette.grey,
+      borderWidth: 1,
+      borderRadius: 5,
+      marginLeft: 10,
+      marginRight: 10,
+      zIndex: 5,
+    },
+    searchParameter: {
+      zIndex: 1,
+      marginLeft: 10,
+      marginRight: 10,
+      borderColor: palette.grey,
+      borderWidth: 1,
+      borderRadius: 5,
+      padding: 10,
+    },
+    parameterLabel: {
+      fontSize: 12,
+      color: palette.greyDark,
+      fontWeight: "500",
+      marginBottom: 5,
+    },
+    searchBar: {},
     transportButtons: {
       zIndex: 0,
+    },
+    sliderContainer: {
+      marginBottom: 5,
+    },
+    sliderLegend: {
+      marginTop: -15,
+      marginLeft: 15,
+      marginRight: 15,
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    sliderLegentText: {
+      fontSize: 10,
+      color: palette.grey
+    },
+    selectedTransportBtn: {
+
+    },
+    submitButtonText: {
+      fontSize: 12,
+      fontWeight: "700",
+      textTransform: "uppercase"
+    },
+    submitButton: {
+      backgroundColor: palette.orangeLight
+    },
+    submitButtonContainer: {
+      marginTop: 10,
+      marginLeft: 10,
+      marginRight: 10,
     }
 });

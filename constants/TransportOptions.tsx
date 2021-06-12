@@ -1,23 +1,24 @@
 import { Icon } from "react-native-elements";
 import React from "react";
+import palette from "~/constants/Colors.ts";
 
 export default [
         {
             value: "walk",
             displayValue:
                 <Icon
-                    name="directions-walk"
-                    type="material"
-                    color="black"
+                    name="walk-outline"
+                    type="ionicon"
+                    color={ palette.greyDark }
                 />
         },
         {
             value: "transport",
             displayValue:
                 <Icon
-                    name="directions-train"
-                    type="material"
-                    color="black"
+                    name="train-outline"
+                    type="ionicon"
+                    color={ palette.greyDark }
                 />
         }
 ]

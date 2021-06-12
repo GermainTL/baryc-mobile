@@ -27,6 +27,8 @@ export default class AdressOption extends Component {
 
 const styles = StyleSheet.create({
     option: {
+        backgroundColor: 'white',
+        zIndex: 5,
         marginTop: 10,
         marginBottom: 10,
         paddingLeft: 10

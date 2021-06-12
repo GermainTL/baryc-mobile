@@ -20,6 +20,7 @@ export default {
   orangeLight: '#f9683a',
   orangeDark: '#870000',
   grey: '#C4C4C4',
+  greyDark: '#656565',
   iconShadow: { // Why is it so complicated to have an icon shadow ? Actually I don't know, I just copy/paste from here : https://github.com/oblador/react-native-vector-icons/issues/311
     shadowColor: 'black',
     shadowOpacity: 0.2,
@@ -36,6 +37,14 @@ export default {
     {
       fillColor: "rgba(249, 104, 58, 0.16)",
       strokeColor: "rgba(191, 54, 12, 0.5)",
+    },
+    {
+      fillColor: "rgba(128, 226, 126, 0.16)",
+      strokeColor: "rgba(76, 175, 80, 0.5)",
+    },
+    {
+      fillColor: "rgba(255, 255, 114, 0.16)",
+      strokeColor: "rgba(255, 235, 59, 0.5)",
     }
   ]
 };

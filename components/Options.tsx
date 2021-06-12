@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
         right: 10,
         overflow: 'visible',
         borderWidth: 0.5,
-        borderColor: palette.grey
+        borderColor: palette.grey,
     }
 })

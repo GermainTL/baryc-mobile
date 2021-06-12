@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_TOKEN_NAVITIA, HTTPS_PROTOCOL } from "@env";
-import { reformatCoordinates } from "../CoordinatesHelper.tsx";
+import { reformatCoordinates } from "~/helpers/CoordinatesHelper.tsx";
 
 async function getIsochroneCoordinates(minutes: Number, coordinates: Object) {
         const urlNavitia =
@@ -20,7 +20,7 @@ function getIsochronesCoordinates(locations: any[], travelTime: Number): Promise
                 isochronesCoordinatesPromises.push(getIsochroneCoordinates(travelTime, locations[index].GPSPosition))
             }
         }
-        return Promise.all(isochronesCoordinatesPromises) // Promise are never resolved, why ?
+        return Promise.all(isochronesCoordinatesPromises) // More than 2 promises are never resolved, why ?
                 .then((apiResponses) => {
                     const newIsochronesCoordinates = []
                     for (const apiResponse of apiResponses) {

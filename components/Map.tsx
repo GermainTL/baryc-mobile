@@ -3,6 +3,7 @@ import MapView, { Marker, Polygon } from "react-native-maps";
 import { Image, StyleSheet } from "react-native";
 import palette from "~/constants/Colors.ts";
 import { parisLocalization } from "~/constants/GPSConstants.ts";
+import { getArrayDepth, polygonDepth, multiPolygonDepth } from "~/helpers/CoordinatesHelper";
 const markerImage = require('~/assets/images/marker.png');
 
 export default class Map extends Component {
@@ -31,40 +32,70 @@ export default class Map extends Component {
             {
                 this.props.isochronesCoordinates[0].reformattedCoordinates.length > 0 && (
                     this.props.isochronesCoordinates.map((isochroneCoordinates, isochroneCoordinatesIndex) => {
-                        return (
-                            isochroneCoordinates.reformattedCoordinates.map(multiPolygon => {
+                            if (getArrayDepth(isochroneCoordinates.coordinates) === multiPolygonDepth) { // MultiPolygon
                                 return (
-                                    multiPolygon.map((polygon, index) => {
+                                    isochroneCoordinates.reformattedCoordinates.map(multiPolygon => {
                                         return (
-                                            <Polygon key={ index } coordinates={ polygon }
-                                                     strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
-                                                     strokeWidth={ 3 }
-                                                     zIndex={ 1 }
-                                                     fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
+                                            multiPolygon.map((polygon, index) => {
+                                                return (
+                                                    <Polygon key={ index } coordinates={ polygon }
+                                                             strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
+                                                             strokeWidth={ 3 }
+                                                             zIndex={ 1 }
+                                                             fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
+                                                )
+                                            })
                                         )
                                     })
                                 )
-                            })
-                        )
-                    })
+                            } else if (getArrayDepth(isochroneCoordinates.coordinates) === polygonDepth) { // Polygon
+                                return (
+                                    isochroneCoordinates.reformattedCoordinates.map((polygon,index) => {
+                                                return (
+                                                    <Polygon key={ index } coordinates={ polygon }
+                                                             strokeColor={ palette.polygonColors[isochroneCoordinatesIndex].strokeColor }
+                                                             strokeWidth={ 3 }
+                                                             zIndex={ 1 }
+                                                             fillColor={ palette.polygonColors[isochroneCoordinatesIndex].fillColor }/>
+                                                )
+                                            })
+                                    )
+                            }
+                        }
+                    ))
+            }
+            {
+                this.props.intersection !== null && this.props.intersection.reformattedCoordinates.length > 0 && getArrayDepth(this.props.intersection.coordinates) === multiPolygonDepth && ( // MultiPolygon
+                        this.props.intersection.reformattedCoordinates.map((multiPolygon, multiPolygonIndex) => {
+                            return (
+                                multiPolygon.map((polygon, polygonIndex) => {
+                                    return (
+                                        <Polygon key={ `${multiPolygonIndex}:${polygonIndex}` } coordinates={ polygon }
+                                            strokeColor={ 'white' }
+                                            strokeWidth={ 3 }
+                                            fillColor={ 'rgba(255,255,255,0.16)' }
+                                            zIndex={ 2 }
+                                        />
+                                    )
+                                })
+                            )
+                        })
                 )
             }
             {
-                this.props.intersection !== null && this.props.intersection.reformattedCoordinates.length > 0 && (
-                    this.props.intersection.reformattedCoordinates.map((multiPolygon, multiPolygonIndex) => {
-                        return (
-                            multiPolygon.map((polygon, polygonIndex) => {
-                                return (
-                                    <Polygon key={ `${multiPolygonIndex}:${polygonIndex}` } coordinates={ polygon }
-                                        strokeColor={ 'white' }
-                                        strokeWidth={ 3 }
-                                        fillColor={ 'rgba(255,255,255,0.16)' }
-                                        zIndex={ 2 }
-                                    />
-                                )
-                            })
-                        )
-                    })
+                this.props.intersection !== null && this.props.intersection.reformattedCoordinates.length > 0 && getArrayDepth(this.props.intersection.coordinates) === polygonDepth && (
+                        this.props.intersection.reformattedCoordinates.map((polygon, polygonIndex) => {
+                            return (
+                                <Polygon
+                                    key={ `${polygon}:${polygonIndex}` }
+                                    coordinates={ polygon }
+                                    strokeColor={ 'white' }
+                                    strokeWidth={ 3 }
+                                    fillColor={ 'rgba(255,255,255,0.16)' }
+                                    zIndex={ 2 }
+                                />
+                            )
+                        })
                 )
             }
             </MapView>

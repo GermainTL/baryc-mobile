@@ -1,13 +1,20 @@
 import * as turf from "@turf/turf";
 import { getBarsFromApi, getMarkersFromBars } from "./API/BarsAPI.tsx";
 import { getIsochronesCoordinates } from "~/helpers/API/NavitiaAPI.tsx";
+import { getIsochronesCoordinatesForCylingOrWalking } from "~/helpers/API/MapboxAPI.tsx";
+
 
 function getIntersection(isochronesCoordinates: any[]): Promise
 {
     return new Promise(resolve => {
         const turfMultiPolygons = [];
+
         for (const isochroneCoordinates of isochronesCoordinates) {
-            turfMultiPolygons.push(turf.multiPolygon(isochroneCoordinates.coordinates))
+            const isochroneDepth = getArrayDepth(isochroneCoordinates.coordinates)
+            if (isochroneDepth === multiPolygonDepth || isochroneDepth === polygonDepth) {
+                const isMultiPolygon = isochroneDepth === multiPolygonDepth
+                turfMultiPolygons.push(isMultiPolygon ? turf.multiPolygon(isochroneCoordinates.coordinates) : turf.polygon(isochroneCoordinates.coordinates))
+            }
         }
         const intersection = computeIntersection(turfMultiPolygons)
 
@@ -18,19 +25,26 @@ function getIntersection(isochronesCoordinates: any[]): Promise
     })
 }
 
-function computeIntersection(turfMultiPolygons: any[]) {
-    if (turfMultiPolygons.length > 2) {
-        turfMultiPolygons[0] = turf.intersect(turfMultiPolygons[0], turfMultiPolygons[1])
-        computeIntersection(turfMultiPolygons)
+// turfPolygon arg can be either polygon or multiPolygon
+function computeIntersection(turfPolygons: any[]) {
+    if (turfPolygons.length > 2) {
+        turfPolygons[0] = turf.intersect(turfPolygons[0], turfPolygons[1])
+        computeIntersection(turfPolygons)
     } else {
-        return turf.intersect(turfMultiPolygons[0], turfMultiPolygons[1])
+        return turf.intersect(turfPolygons[0], turfPolygons[1])
     }
 }
 
 function findBarsInPolygon(bars: any[], multiPolygonCoordinates: any[]): Promise {
         return new Promise(resolve => {
             const barsInPolygon = []
-            const polygon = turf.multiPolygon(multiPolygonCoordinates)
+            let polygon = null
+            if (getArrayDepth(multiPolygonCoordinates) === multiPolygonDepth ) {
+                polygon = turf.multiPolygon(multiPolygonCoordinates)
+            } else if (getArrayDepth(multiPolygonCoordinates) === polygonDepth){
+                polygon = turf.polygon(multiPolygonCoordinates)
+            }
+
             for (const bar of bars) {
                 if (turf.booleanPointInPolygon(turf.point(bar.coordinates), polygon)) {
                     barsInPolygon.push(bar)
@@ -40,13 +54,20 @@ function findBarsInPolygon(bars: any[], multiPolygonCoordinates: any[]): Promise
         })
 }
 
-function retrieveNewMapElements(locations: any[], travelTime: Number): Promise {
+function retrieveNewMapElements(locations: any[], travelTime: Number, meanOfTransport: String): Promise {
     return new Promise(resolve => {
         let newIntersection = null
         let newIsochronesCoordinates = []
         let newMarkers = []
 
-        getIsochronesCoordinates(locations, travelTime)
+        let isochroneCoordinatePromises = null;
+        const shouldUseMapbox = ['cycling','walking'].includes(meanOfTransport);
+        if (shouldUseMapbox) {
+            isochroneCoordinatePromises = getIsochronesCoordinatesForCylingOrWalking(locations, travelTime, meanOfTransport)
+        } else {
+            isochroneCoordinatePromises = getIsochronesCoordinates(locations, travelTime, meanOfTransport)
+        }
+        isochroneCoordinatePromises
             .then((isochronesCoordinates) => {
                 newIsochronesCoordinates = isochronesCoordinates
                 if (newIsochronesCoordinates.length > 1) {
@@ -64,7 +85,15 @@ function retrieveNewMapElements(locations: any[], travelTime: Number): Promise {
                         newMarkers = getMarkersFromBars(barsInPolygon)
                     })
                 } else {
-                    // what to do when no intersection exists ?
+                    const barsInPolygonPromises = []
+                     for (const newIsochroneCoordinate of newIsochronesCoordinates) {
+                        barsInPolygonPromises.push(findBarsInPolygon(bars, newIsochroneCoordinate.coordinates))
+                    }
+                    Promise.all(barsInPolygonPromises).then((barsInPolygons) => {
+                        for(const barsInPolygon of barsInPolygons) {
+                            newMarkers.concat(getMarkersFromBars(barsInPolygon))
+                        }
+                    })
                 }
             })
             .then(() => {
@@ -88,5 +117,14 @@ function reformatCoordinates(coordinates) {
     return coordinates
 }
 
+function getArrayDepth(value) {
+    return Array.isArray(value) ?
+        1 + Math.max(...value.map(getArrayDepth)) :
+        0;
+}
 
-export { getIntersection, reformatCoordinates, findBarsInPolygon, retrieveNewMapElements }
+const multiPolygonDepth = 4
+const polygonDepth = 3
+
+
+export { getIntersection, reformatCoordinates, findBarsInPolygon, retrieveNewMapElements, getArrayDepth, multiPolygonDepth, polygonDepth }

@@ -36,7 +36,7 @@ const INITIAL_STATE = {
     },
   ],
   travelTime: 30,
-  selectedTransport: null,
+  selectedTransport: 'walking',
   isochronesCoordinates: [
     {
       reformattedCoordinates: [],
@@ -132,7 +132,7 @@ export default class TabMapScreen extends Component {
       isLoading: true
     })
 
-    retrieveNewMapElements(this.state.locations, this.state.travelTime)
+    retrieveNewMapElements(this.state.locations, this.state.travelTime, this.state.selectedTransport)
       .then((newMapElements) => {
         this.setState({
           isochronesCoordinates: newMapElements.newIsochronesCoordinates,
@@ -255,9 +255,8 @@ export default class TabMapScreen extends Component {
                       <ButtonGroup
                           containerStyle={{ zIndex: 0 }}
                           buttonContainerStyle={{ paddingTop: 8 }}
-                          onPress={(index) => this.updateSelectTransport(transportOptions[index].value) }
-                          selectedIndex={ selectedTransport }
-                          buttons={ transportOptions.map((transportOption) => {
+                          onPress={(index) => this.updateSelectTransport(transportOptions(selectedTransport)[index].value) }
+                          buttons={ transportOptions(selectedTransport).map((transportOption) => {
                             return transportOption.displayValue
                           }) }
                         />

@@ -47,7 +47,7 @@ export default function App() {
             <SafeAreaProvider>
               <Navigation colorScheme={colorScheme}/>
               <StatusBar/>
-              <Notification text="test"/>
+              <Notification />
             </SafeAreaProvider>
           </LocalizationContext.Provider>
         </Provider>

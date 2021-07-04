@@ -2,7 +2,7 @@ import * as turf from "@turf/turf";
 import { getBarsFromApi, getMarkersFromBars } from "./API/BarsAPI.tsx";
 import { getIsochronesCoordinates } from "~/helpers/API/NavitiaAPI.tsx";
 import { getIsochronesCoordinatesForCylingOrWalking } from "~/helpers/API/MapboxAPI.tsx";
-
+import store from "~/store/createStore.tsx";
 
 function getIntersection(isochronesCoordinates: any[]): Promise
 {
@@ -82,6 +82,8 @@ function retrieveNewMapElements(locations: any[], travelTime: Number, meanOfTran
             .then((bars) => {
                 if (newIntersection) {
                     findBarsInPolygon(bars, newIntersection.coordinates).then((barsInPolygon) => {
+                        const action = { type: "UPDATE_BARS", bars: barsInPolygon }
+                        store.dispatch(action)
                         newMarkers = getMarkersFromBars(barsInPolygon)
                     })
                 } else {
@@ -93,6 +95,8 @@ function retrieveNewMapElements(locations: any[], travelTime: Number, meanOfTran
                         for(const barsInPolygon of barsInPolygons) {
                             newMarkers.concat(getMarkersFromBars(barsInPolygon))
                         }
+                        const action = { type: "UPDATE_BARS", bars: barsInPolygon }
+                        store.dispatch(action)
                     })
                 }
             })

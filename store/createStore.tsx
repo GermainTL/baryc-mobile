@@ -1,4 +1,5 @@
-import { createStore } from 'redux';
-import displayNotification from './NotificationReducer.tsx'
+import { createStore, combineReducers } from 'redux';
+import notificationReducer from './reducers/NotificationReducer.tsx'
+import barsReducer from "./reducers/BarsReducer.tsx";
 
-export default createStore(displayNotification)
+export default createStore(combineReducers({ notificationText: notificationReducer, bars: barsReducer }))

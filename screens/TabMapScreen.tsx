@@ -55,13 +55,21 @@ class TabMapScreen extends Component {
 
 
   componentDidMount(): void {
-    getBarsFromApi().then((bars) => {
-      const markers = getMarkersFromBars(bars)
+    if (this.props.bars === null) {
+      getBarsFromApi().then((bars) => {
+        const markers = getMarkersFromBars(bars)
+        this.setState({
+          markers: markers,
+          isLoading: false,
+        });
+      })
+    } else {
+      const markers = getMarkersFromBars(this.props.bars)
       this.setState({
         markers: markers,
         isLoading: false,
       });
-    })
+    }
   }
   
   togglePanel(): void {
@@ -287,7 +295,12 @@ class TabMapScreen extends Component {
   }
 }
 
-export default connect()(TabMapScreen)
+const mapStateToProps = (state) => {
+  return {
+    bars: state.bars
+  }
+}
+export default connect(mapStateToProps)(TabMapScreen)
 
 const styles = StyleSheet.create({
   container: {

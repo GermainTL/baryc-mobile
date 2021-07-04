@@ -4,20 +4,37 @@ import { Bar } from '~/components/Bar.tsx'
 import BarycLoader from '~/components/BarycLoader.tsx'
 import { Component } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
+import { connect } from "react-redux";
 
-export default class TabBarsScreen extends Component {
+class TabBarsScreen extends Component {
   state = {
     bars: [],
     isLoading: true
   }
 
   componentDidMount() {
-    getBarsFromApi().then((bars) => {
+    if (this.props.bars === null) {
+      getBarsFromApi().then((bars) => {
+        this.setState({
+          bars: bars,
+          isLoading: false,
+        })
+      })
+    } else {
       this.setState({
-        bars: bars,
+        bars: this.props.bars,
         isLoading: false,
       })
-    })
+    }
+  }
+
+  static getDerivedStateFromProps(props, currentState) {
+    if (currentState.bars !== props.bars) {
+      return {
+        bars: props.bars,
+      }
+    }
+    return null
   }
 
   render(): JSX.Element {
@@ -43,6 +60,14 @@ export default class TabBarsScreen extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    bars: state.bars
+  }
+}
+
+export default connect(mapStateToProps)(TabBarsScreen)
 
 const styles = StyleSheet.create({
   loaderContainer: {

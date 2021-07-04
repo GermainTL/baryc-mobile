@@ -1,4 +1,7 @@
 {
+  "global": {
+    "moreThan2NotWorkingYet": "Adding a friend is not working yet"
+  },
   "TabMapScreen": {
     "title": "Let's find a bar !",
     "yourPosition": "My position \uD83D\uDCCD",

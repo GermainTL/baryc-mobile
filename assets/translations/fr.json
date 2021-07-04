@@ -1,4 +1,7 @@
 {
+  "global": {
+    "moreThan2NotWorkingYet": "Ajouter un ami ne fonctionne pas encore"
+  },
   "TabMapScreen": {
     "title": "Trouvons un bar !",
     "myPosition": "Ma position \uD83D\uDCCD",
@@ -7,5 +10,5 @@
     "search": "Trouver un bar à mi-chemin",
     "travelTime": "Temps de trajet",
     "meansOfTransport": "Moyen de transport"
-  }
+  },
 }

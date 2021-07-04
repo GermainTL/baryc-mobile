@@ -1,12 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useCallback } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
+import Notification from "~/components/Notification.tsx";
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import * as i18n from '~/helpers/i18n.js';
 import LocalizationContext from '~/context/LocalizationContext.js';
+import { Provider } from 'react-redux'
+import Store from '~/store/createStore.tsx'
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -38,16 +40,19 @@ export default function App() {
     };
   }, []);
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
+  if (isLoadingComplete) {
     return (
-    <LocalizationContext.Provider value={ localizationContext }>
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
-    </LocalizationContext.Provider>
+        <Provider store={Store}>
+          <LocalizationContext.Provider value={localizationContext}>
+            <SafeAreaProvider>
+              <Navigation colorScheme={colorScheme}/>
+              <StatusBar/>
+              <Notification />
+            </SafeAreaProvider>
+          </LocalizationContext.Provider>
+        </Provider>
     );
+  } else {
+    return null;
   }
 }

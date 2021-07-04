@@ -12,6 +12,7 @@ import BarycLoader from "~/components/BarycLoader";
 import CoolSliderThumb from "~/components/CoolSliderThumb.tsx";
 import * as i18n from '~/helpers/i18n.js';
 import palette from "~/constants/Colors.ts" ;
+import { connect } from 'react-redux'
 
 const INITIAL_STATE = {
   markers: [],
@@ -46,7 +47,7 @@ const INITIAL_STATE = {
   intersection: null
 }
 
-export default class TabMapScreen extends Component {
+class TabMapScreen extends Component {
   constructor(){
     super();
     this.state = INITIAL_STATE
@@ -103,7 +104,10 @@ export default class TabMapScreen extends Component {
   }
 
   addLocation(): void {
-    const locations = [ ...this.state.locations ]
+
+    const action = { type: "DISPLAY_NOTIFICATION", notificationText: i18n.t("global.moreThan2NotWorkingYet") }
+    this.props.dispatch(action)
+    /* const locations = [ ...this.state.locations ]
     locations.push({
       searchValue: '',
       GPSPosition: {
@@ -112,7 +116,7 @@ export default class TabMapScreen extends Component {
       },
       options: []
     })
-    this.setState({ locations: locations })
+    this.setState({ locations: locations }) */
   }
 
   selectLocation(location: Object, index: Number): void {
@@ -283,6 +287,7 @@ export default class TabMapScreen extends Component {
   }
 }
 
+export default connect()(TabMapScreen)
 
 const styles = StyleSheet.create({
   container: {

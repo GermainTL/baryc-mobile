@@ -21,7 +21,7 @@ function getIntersection(isochronesCoordinates: any[]): Promise
         const rawCoordinates = JSON.parse(JSON.stringify(intersection.geometry.coordinates))
         const reformattedCoordinates =
             intersection !== null ? reformatCoordinates(intersection.geometry.coordinates) : null
-        resolve({ coordinates: rawCoordinates, reformattedCoordinates: reformattedCoordinates } )
+        resolve(intersection !== null ? { coordinates: rawCoordinates, reformattedCoordinates: reformattedCoordinates } : null )
     })
 }
 
@@ -71,7 +71,7 @@ function retrieveNewMapElements(locations: any[], travelTime: Number, meanOfTran
             .then((isochronesCoordinates) => {
                 newIsochronesCoordinates = isochronesCoordinates
                 if (newIsochronesCoordinates.length > 1) {
-                    getIntersection(newIsochronesCoordinates).then((intersection: any[]) => {
+                    getIntersection(newIsochronesCoordinates).then((intersection: any[]|null) => {
                         newIntersection = intersection
                     })
                 }

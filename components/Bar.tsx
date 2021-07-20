@@ -1,31 +1,34 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import * as React from 'react';
 import { Card, Rating } from 'react-native-elements'
+import { Component } from 'react';
 
-interface Props {
-    bar: Object;
-}
-
-export function Bar(props: Props) {
-    return (
-            <Card containerStyle={ styles.card }>
-                <View style={ styles.titleContainer }>
-                    <Text style={ styles.title }>
-                    {
-                        props.bar.nom
-                    }
-                    </Text>
-                    <Rating fractions={ 1 } readonly imageSize={ 16 } startingValue={ props.bar.note }/>
-                </View>
-                <Text style={ styles.description }>
-                    "{
-                        props.bar.renseignements
+export default class Bar extends Component {
+    render(): JSX.Element {
+        return (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Bar', {
+                barId: this.props.bar.id,
+            })
+            }>
+                <Card containerStyle={ styles.card }>
+                    <View style={ styles.titleContainer }>
+                        <Text style={ styles.title }>
+                            {
+                                this.props.bar.nom
+                            }
+                        </Text>
+                        <Rating fractions={ 1 } readonly imageSize={ 16 } startingValue={ this.props.bar.note }/>
+                    </View>
+                    <Text style={ styles.description }>
+                        "{
+                        this.props.bar.renseignements
                     }"
-                </Text>
-            </Card>
-    )
+                    </Text>
+                </Card>
+            </TouchableOpacity>
+        )
+    }
 }
-
 
 const styles = StyleSheet.create({
     card: {

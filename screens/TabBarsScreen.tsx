@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FlatList, StyleSheet, ActivityIndicator, SafeAreaView, View } from 'react-native';
-import { Bar } from '~/components/Bar.tsx'
+import Bar from '~/components/Bar.tsx'
 import BarycLoader from '~/components/BarycLoader.tsx'
 import { Component } from "react";
 import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
@@ -51,7 +51,7 @@ class TabBarsScreen extends Component {
         !this.state.isLoading && (
           <FlatList
           data={ this.state.bars }
-          renderItem={({item}) => <Bar bar={ item }/>}
+          renderItem={({item}) => <Bar bar={ item } navigation={ this.props.navigation }/>}
           keyExtractor={(item, index: number) => index.toString()}
           />
         )

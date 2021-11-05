@@ -16,6 +16,11 @@ export default {
               TabBarsScreen: 'bars',
             },
           },
+          Bar: {
+            screens: {
+              BarScreen: 'bar',
+            },
+          },
         },
       },
       NotFound: '*',

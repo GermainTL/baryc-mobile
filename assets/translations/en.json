@@ -1,6 +1,7 @@
 {
   "global": {
-    "moreThan2NotWorkingYet": "Adding a friend is not working yet"
+    "moreThan2NotWorkingYet": "Adding a friend is not working yet",
+    "error": "We encountered an error, sorry ... \uD83E\uDDF8"
   },
   "TabMapScreen": {
     "title": "Let's find a bar !",
@@ -10,5 +11,11 @@
     "search": "Find a bar halfway",
     "travelTime": "Travel time",
     "meansOfTransport": "Means of transport"
+  },
+  "TabBarScreen": {
+    "mainAssets": "Main assets",
+    "showOnGoogleMaps": "Show on Google maps",
+    "showOnCityMapper": "Show on CityMapper",
+    "showOnUber": "showOnUber"
   }
 }

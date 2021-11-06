@@ -18,7 +18,7 @@ export default {
           },
           Bar: {
             screens: {
-              BarScreen: 'bar',
+              TabBarScreen: 'bar',
             },
           },
         },

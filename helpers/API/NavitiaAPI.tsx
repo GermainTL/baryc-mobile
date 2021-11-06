@@ -4,7 +4,7 @@ import { reformatCoordinates } from "~/helpers/CoordinatesHelper.tsx";
 
 async function getIsochroneCoordinates(minutes: Number, coordinates: Object) {
         const urlNavitia =
-            `${HTTPS_PROTOCOL}api.navitia.io/v1/coverage/fr-idf/isochrones?from=${coordinates.latitude};${coordinates.longitude}&min_duration=0&max_duration=${minutes * 60}`
+            `${HTTPS_PROTOCOL}api.navitia.io/v1/coverage/fr-idf/isochrones?from=${coordinates.longitude};${coordinates.latitude}&min_duration=0&max_duration=${minutes * 60}`
         return await axios
                     .get(urlNavitia, {
                         headers: {

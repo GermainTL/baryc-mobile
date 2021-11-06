@@ -20,13 +20,20 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "GermainTL"
+      "bundleIdentifier": "GermainTL",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "On peut accéder à ton GPS ?"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

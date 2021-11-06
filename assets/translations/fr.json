@@ -1,6 +1,7 @@
 {
   "global": {
-    "moreThan2NotWorkingYet": "Ajouter un ami ne fonctionne pas encore"
+    "moreThan2NotWorkingYet": "Ajouter un ami ne fonctionne pas encore",
+    "error": "Nous avons rencontré une erreur, désolé ... \uD83E\uDDF8"
   },
   "TabMapScreen": {
     "title": "Trouvons un bar !",
@@ -10,5 +11,11 @@
     "search": "Trouver un bar à mi-chemin",
     "travelTime": "Temps de trajet",
     "meansOfTransport": "Moyen de transport"
+  },
+  "TabBarScreen": {
+    "mainAssets": "Les atouts",
+    "showOnGoogleMaps": "Montrer sur Google maps",
+    "showOnCityMapper": "Montrer sur CityMapper",
+    "showOnUber": "Montrer sur Uber"
   }
 }

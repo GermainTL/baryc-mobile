@@ -22,7 +22,7 @@ export default class Bar extends Component {
                     <Text style={ styles.description }>
                         "{
                         this.props.bar.renseignements
-                    }"
+                        }"
                     </Text>
                 </Card>
             </TouchableOpacity>

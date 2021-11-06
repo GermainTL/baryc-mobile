@@ -7,6 +7,8 @@ import Colors from '~/constants/Colors';
 import useColorScheme from '~/hooks/useColorScheme';
 import TabMapScreen from '~/screens/TabMapScreen';
 import TabBarsScreen from '~/screens/TabBarsScreen';
+import TabBarScreen from '~/screens/TabBarScreen';
+
 import { BottomTabParamList, TabMapParamList, TabBarsParamList } from '../types';
 import { Icon } from "react-native-elements";
 
@@ -66,6 +68,10 @@ function TabBarsNavigator() {
       <TabBarsStack.Screen
         name="TabBarsScreen"
         component={TabBarsScreen}
+      />
+      <TabBarsStack.Screen
+        name="Bar"
+        component={TabBarScreen}
       />
     </TabBarsStack.Navigator>
   );

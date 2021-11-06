@@ -13,6 +13,7 @@ import CoolSliderThumb from "~/components/CoolSliderThumb.tsx";
 import * as i18n from '~/helpers/i18n.js';
 import palette from "~/constants/Colors.ts" ;
 import { connect } from 'react-redux'
+import * as Location from "expo-location";
 
 const INITIAL_STATE = {
   markers: [],
@@ -53,8 +54,8 @@ class TabMapScreen extends Component {
     this.state = INITIAL_STATE
   }
 
-
-  componentDidMount(): void {
+  async componentDidMount(): void {
+    await this.initializeUserLocation()
     if (this.props.bars === null) {
       getBarsFromApi().then((bars) => {
         const markers = getMarkersFromBars(bars)
@@ -71,7 +72,25 @@ class TabMapScreen extends Component {
       });
     }
   }
-  
+
+  async initializeUserLocation(): void {
+    const nextState = JSON.parse(JSON.stringify(this.state))
+
+    let userCoordinates = {}
+    try {
+      const { status } = await Location.requestPermissionsAsync();
+      if (status == 'granted') {
+        userCoordinates = await Location.getCurrentPositionAsync({ accuracy: 5 });
+      }
+      nextState.locations[0].GPSPosition.latitude = userCoordinates.coords.latitude
+      nextState.locations[0].GPSPosition.longitude = userCoordinates.coords.longitude
+      this.setState(nextState)
+    } catch (error) {
+      const action = { type: "DISPLAY_NOTIFICATION", notificationText: i18n.t("global.error") }
+      this.props.dispatch(action)
+    }
+  }
+
   togglePanel(): void {
      this.setState((prevState) => {
       return {

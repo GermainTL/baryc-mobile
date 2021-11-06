@@ -4,7 +4,7 @@ import { reformatCoordinates } from "~/helpers/CoordinatesHelper.tsx";
 
 async function getIsochroneCoordinates(minutes: Number, coordinates: Object, meanOfTransport: String) {
     const urlMapbox =
-        `${HTTPS_PROTOCOL}api.mapbox.com/isochrone/v1/mapbox/${meanOfTransport}/${coordinates.latitude},${coordinates.longitude}?contours_minutes=${minutes}&polygons=true&access_token=${API_TOKEN_MAPBOX}`
+        `${HTTPS_PROTOCOL}api.mapbox.com/isochrone/v1/mapbox/${meanOfTransport}/${coordinates.longitude},${coordinates.latitude}?contours_minutes=${minutes}&polygons=true&access_token=${API_TOKEN_MAPBOX}`
 
     return await axios
         .get(urlMapbox)

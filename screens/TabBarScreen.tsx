@@ -17,7 +17,6 @@ class TabBarScreen extends Component {
     }
 
     async componentDidMount() {
-
         let bar = {}
         for (const tempBar of this.props.bars) {
             if (tempBar.id === this.props.route.params.barId) {

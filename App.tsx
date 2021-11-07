@@ -9,13 +9,13 @@ import * as i18n from '~/helpers/i18n.js';
 import LocalizationContext from '~/context/LocalizationContext.js';
 import { Provider } from 'react-redux'
 import Store from '~/store/createStore.tsx'
+import BarycLoader from "./components/BarycLoader";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
   const [locale, setLocale] = React.useState(i18n.DEFAULT_LANGUAGE);
-
   const localizationContext = React.useMemo(
       () => ({
         t: (scope, options) => i18n.t(scope, {locale, ...options}),
@@ -47,12 +47,12 @@ export default function App() {
             <SafeAreaProvider>
               <Navigation colorScheme={colorScheme}/>
               <StatusBar/>
-              <Notification />
+                { Store.getState().notificationText ? <Notification /> : null }
             </SafeAreaProvider>
           </LocalizationContext.Provider>
         </Provider>
     );
   } else {
-    return null;
+    return <BarycLoader />;
   }
 }

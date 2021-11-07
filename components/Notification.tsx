@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { Button, Icon } from  "react-native-elements"
 
 class Notification extends Component {
-
     closeNotification() {
         const action = { type: "DISPLAY_NOTIFICATION", notificationText: null }
         this.props.dispatch(action)
@@ -13,7 +12,7 @@ class Notification extends Component {
 
     render(): JSX.Element {
         return (
-            <View style={[this.props.notificationContainerStyle, styles.notificationContainerStyle, this.props.notificationText === null ? { display: 'none' } : '']}>
+            <View style={[this.props.notificationContainerStyle, styles.notificationContainerStyle ]}>
                 <Button
                     icon={
                         <Icon

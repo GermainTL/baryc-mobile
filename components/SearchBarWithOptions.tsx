@@ -21,13 +21,11 @@ export default class SearchBarWithOptions extends Component {
                 />
                 {
                     this.props.options.length > 0 && (
-                        <View>
                             <Options
                                 options={ this.props.options }
                                 selectLocation={ this.props.selectLocation }
                                 locationIndex={ this.props.locationIndex }
                             />
-                        </View>
                     )
                 }
             </View>

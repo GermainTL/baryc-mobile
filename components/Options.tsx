@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
 import AdressOption from "~/components/AdressOption.tsx";
-import { FlatList, StyleSheet, SafeAreaView } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import palette from "~/constants/Colors.ts" ;
 
 export default class Options extends Component {
         render(): JSX.Element {
                 return (
-                    <SafeAreaView style={{ flex: 1 }}>
-                        <FlatList
-                            style={ styles.options }
-                            data={ this.props.options }
-                            keyExtractor={(item, index: number) => index.toString()}
-                            renderItem={ (item) =>
-                                <AdressOption
-                                    option={ item }
-                                    selectLocation={ this.props.selectLocation }
-                                    locationIndex={ this.props.locationIndex }
-                                />
-                            }
-                        />
-                    </SafeAreaView>
+                    <View style={ styles.options }>
+                        {
+                            this.props.options && this.props.options.map(option => {
+                                return (
+                                    <AdressOption
+                                        option={ option }
+                                        selectLocation={ this.props.selectLocation }
+                                        locationIndex={ this.props.locationIndex }
+                                    />
+                                )
+                            })
+                        }
+                    </View>
                 )
             }
 }
@@ -28,7 +27,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
         position: "absolute",
-        top: 0,
+        top: 42,
         left: 10,
         right: 10,
         overflow: 'visible',

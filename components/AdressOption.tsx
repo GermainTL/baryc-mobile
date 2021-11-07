@@ -5,10 +5,10 @@ import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 export default class AdressOption extends Component {
     formatLocation(): Object {
         return {
-            searchValue: this.props.option.item.properties.label,
+            searchValue: this.props.option.properties.label,
             GPSPosition: {
-                latitude: this.props.option.item.geometry.coordinates[1],
-                longitude: this.props.option.item.geometry.coordinates[0]
+                latitude: this.props.option.geometry.coordinates[1],
+                longitude: this.props.option.geometry.coordinates[0]
             },
             options: []
         }
@@ -19,7 +19,7 @@ export default class AdressOption extends Component {
             <TouchableOpacity
                 onPress={() => this.props.selectLocation(this.formatLocation(), this.props.locationIndex) }
             >
-                <Text style={ styles.option }>{ this.props.option.item.properties.label }</Text>
+                <Text style={ styles.option }>{ this.props.option.properties.label }</Text>
             </TouchableOpacity>
         )
     }

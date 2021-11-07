@@ -56,6 +56,10 @@ function TabMapNavigator() {
         name="TabMapScreen"
         component={TabMapScreen}
       />
+      <TabBarsStack.Screen
+        name="Bar"
+        component={TabBarScreen}
+       />
     </TabMapStack.Navigator>
   );
 }

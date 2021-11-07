@@ -188,6 +188,7 @@ class TabMapScreen extends Component {
               markers={ markers }
               isochronesCoordinates={ isochronesCoordinates }
               intersection={ intersection }
+              navigation={ this.props.navigation }
             />
           }
           <TouchableOpacity

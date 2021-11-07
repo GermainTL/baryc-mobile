@@ -22,6 +22,10 @@ export default class Map extends Component {
                                 coordinate={ marker.coordinates }
                                 title={ marker.title }
                                 key={ marker.key }
+                                onCalloutPress={() => this.props.navigation.navigate('Bar', {
+                                    barId: marker.key,
+                                   })
+                                }
                             >
                                 <Image source={ markerImage } style={{ height: 20, width: 20 }}/>
                             </Marker>

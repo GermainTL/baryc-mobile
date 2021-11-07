@@ -22,7 +22,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "GermainTL",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "On peut accéder à ton GPS ?"
+        "NSLocationWhenInUseUsageDescription": "On peut accéder à ton GPS ?",
+        "NSAllowsArbitraryLoads": false
       }
     },
     "android": {

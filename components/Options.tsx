@@ -14,6 +14,7 @@ export default class Options extends Component {
                                         option={ option }
                                         selectLocation={ this.props.selectLocation }
                                         locationIndex={ this.props.locationIndex }
+                                        key={ option.properties.id }
                                     />
                                 )
                             })

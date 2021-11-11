@@ -16,6 +16,8 @@
     "mainAssets": "Les atouts",
     "showOnGoogleMaps": "Montrer sur Google maps",
     "showOnCityMapper": "Montrer sur CityMapper",
-    "showOnUber": "Montrer sur Uber"
+    "showOnUber": "Montrer sur Uber",
+    "showOnAppleMaps": "Montrer sur Maps",
+    "showOnAndroidMaps": "Montrer sur Geo"
   }
 }

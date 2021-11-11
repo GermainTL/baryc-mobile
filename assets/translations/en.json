@@ -16,6 +16,8 @@
     "mainAssets": "Main assets",
     "showOnGoogleMaps": "Show on Google maps",
     "showOnCityMapper": "Show on CityMapper",
-    "showOnUber": "showOnUber"
+    "showOnUber": "showOnUber",
+    "showOnAppleMaps": "Show on Maps",
+    "showOnAndroidMaps": "Show on Geo"
   }
 }

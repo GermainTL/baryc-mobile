@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Text, Image, Linking, Platform } from 'react-native';
+import { View, StyleSheet, Text, Image, Linking, Platform, ScrollView } from 'react-native';
 import { Component } from "react";
 import { connect } from "react-redux";
 import BarycLoader from '~/components/BarycLoader.tsx'
@@ -51,9 +51,15 @@ class TabBarScreen extends Component {
         }
     }
 
+    openNativeMapsApp = () => {
+        const scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
+        const url = scheme + `${this.state.bar.coordinates[1]},${this.state.bar.coordinates[0]}`;
+        Linking.openURL(url);
+    }
+
     render(): JSX.Element {
         return (
-            <View style={ styles.container }>
+            <View style={ [styles.container] }>
                 <BarycLoader
                     visible={ this.state.isLoading }
                     containerStyle={ styles.loaderContainer }
@@ -61,7 +67,7 @@ class TabBarScreen extends Component {
                 />
                 {
                     !this.state.isLoading && (
-                        <View style={ styles.container }>
+                        <ScrollView style={ styles.container } contentContainerStyle={{ paddingBottom: 30}}>
                                 <View style={ styles.barNameAndRating } >
                                     <Text style={ styles.title }>{ this.state.bar.nom }</Text>
                                     <Rating style={ styles.rating } tintColor="white" fractions={ 1 } readonly imageSize={ 16 } startingValue={ this.state.bar.note } />
@@ -86,7 +92,7 @@ class TabBarScreen extends Component {
                             <Button
                                 raised={ true }
                                 title={ i18n.t('TabBarScreen.showOnGoogleMaps') }
-                                titleStyle={ styles.goWithGgMapsBtnText }
+                                titleStyle={ styles.goWithMapsBtnText }
                                 buttonStyle={ styles.goWithGgMapsBtn }
                                 containerStyle={ styles.goWithGgMapsBtnContainer }
                                 onPress={async () => await this.openLocation("google-maps")
@@ -95,7 +101,7 @@ class TabBarScreen extends Component {
                             <Button
                                 raised={ true }
                                 title={ i18n.t('TabBarScreen.showOnCityMapper') }
-                                titleStyle={ styles.goWithGgMapsBtnText }
+                                titleStyle={ styles.goWithMapsBtnText }
                                 buttonStyle={ styles.goWithCityMapperBtn }
                                 containerStyle={ styles.goWithCityMapperBtnContainer }
                                 onPress={async () => await this.openLocation("citymapper")
@@ -104,13 +110,22 @@ class TabBarScreen extends Component {
                             <Button
                                 raised={ true }
                                 title={ i18n.t('TabBarScreen.showOnUber') }
-                                titleStyle={ styles.goWithGgMapsBtnText }
+                                titleStyle={ styles.goWithMapsBtnText }
                                 buttonStyle={ styles.goWithUberBtn }
                                 containerStyle={ styles.goWithUberBtnContainer }
                                 onPress={async () => await this.openLocation("uber")
                                 }
                             />
-                        </View>
+                            <Button
+                                raised={ true }
+                                title={ Platform.OS === 'ios' ? i18n.t('TabBarScreen.showOnAppleMaps') : i18n.t('TabBarScreen.showOnAndroidMaps') }
+                                titleStyle={ styles.goWithMapsBtnText }
+                                buttonStyle={ styles.goWithNativeMapsBtn }
+                                containerStyle={ styles.goWithNativeMapsBtnContainer }
+                                onPress={ () => this.openNativeMapsApp()
+                                }
+                            />
+                        </ScrollView>
                     )
                 }
             </View>
@@ -130,7 +145,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        justifyContent: "flex-start",
         height: '100%',
         paddingHorizontal: 14,
         paddingVertical: 20,
@@ -187,7 +201,7 @@ const styles = StyleSheet.create({
         top: '33%',
         zIndex: 1000,
     },
-    goWithGgMapsBtnText: {
+    goWithMapsBtnText: {
         fontSize: 12,
         fontWeight: "700",
         textTransform: "uppercase"
@@ -209,6 +223,12 @@ const styles = StyleSheet.create({
     },
     goWithUberBtnContainer: {
         marginTop: 10,
+    },
+    goWithNativeMapsBtnContainer: {
+        marginTop: 10,
+    },
+    goWithNativeMapsBtn: {
+        backgroundColor: palette.grey,
     },
     rating: {
         backgroundColor: 'transparent'

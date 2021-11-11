@@ -22,8 +22,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "GermainTL",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "On peut accéder à ton GPS ?",
-        "NSAllowsArbitraryLoads": false
+        "NSLocationWhenInUseUsageDescription": "Votre position GPS sera utilisée pour trouver les bars qui sont le plus proche entre vous et vos amis.",
+        "NSAllowsArbitraryLoads": false,
+        "LSApplicationQueriesSchemes": ["comgooglemaps", "citymapper", "uber", "map", "geo"]
       }
     },
     "android": {

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "baryc-mobile",
-    "slug": "baryc-mobile",
+    "name": "Baryc",
+    "slug": "baryc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

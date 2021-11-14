@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Options from "~/components/Options.tsx";
 import {  StyleSheet, View } from "react-native";
-import { SearchBar } from "react-native-elements";
+import { Icon, SearchBar } from "react-native-elements";
 import palette from "~/constants/Colors.ts" ;
 
 export default class SearchBarWithOptions extends Component {
     render(): JSX.Element {
-
         return (
             <View style={ this.props.containerStyle }>
                 <SearchBar
@@ -14,10 +13,17 @@ export default class SearchBarWithOptions extends Component {
                     onClear={() => this.props.clearLocation(this.props.locationIndex) }
                     placeholder={ this.props.placeholder }
                     value={ this.props.value }
-                    lightTheme
-                    containerStyle={[styles.searchBar, this.props.isLastSearchBar === true ? styles.lastSearchBar : '' ]}
+                    containerStyle={ [styles.searchBar, this.props.isLastSearchBar === true ? styles.lastSearchBar : '' ]}
                     inputContainerStyle={ styles.searchBarContainerInput }
                     inputStyle={ styles.searchBarInput }
+                    placeholderTextColor={ this.props.isGPSUsed === true ? palette.orangeLight : '#86939e' }
+                    searchIcon={
+                        this.props.isGPSUsed === true ?
+                            {
+                                name: "locate-outline",
+                                type: "ionicon"
+                            } : true
+                    }
                 />
                 {
                     this.props.options.length > 0 && (
@@ -53,5 +59,8 @@ const styles = StyleSheet.create({
     },
     searchBarInput: {
         fontSize: 14
+    },
+    inputGPSUsed: {
+        color: '#00BFFF',
     }
 })

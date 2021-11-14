@@ -37,6 +37,7 @@ const INITIAL_STATE = {
       options: []
     },
   ],
+  isUserGPSLocationUsed: false,
   travelTime: 30,
   selectedTransport: 'walking',
   isochronesCoordinates: [
@@ -55,7 +56,6 @@ class TabMapScreen extends Component {
   }
 
   async componentDidMount(): void {
-    await this.initializeUserLocation()
     if (this.props.bars === null) {
       getBarsFromApi().then((bars) => {
         const markers = getMarkersFromBars(bars)
@@ -71,10 +71,11 @@ class TabMapScreen extends Component {
         isLoading: false,
       });
     }
+    this.initializeUserLocation()
   }
 
   async initializeUserLocation(): void {
-    const nextState = JSON.parse(JSON.stringify(this.state))
+    const locations = [ ...this.state.locations ]
 
     let userCoordinates = {}
     try {
@@ -82,9 +83,9 @@ class TabMapScreen extends Component {
       if (status == 'granted') {
         userCoordinates = await Location.getCurrentPositionAsync({ accuracy: 5 });
       }
-      nextState.locations[0].GPSPosition.latitude = userCoordinates.coords.latitude
-      nextState.locations[0].GPSPosition.longitude = userCoordinates.coords.longitude
-      this.setState(nextState)
+      locations[0].GPSPosition.latitude = userCoordinates.coords.latitude
+      locations[0].GPSPosition.longitude = userCoordinates.coords.longitude
+      this.setState({ locations: locations, isUserGPSLocationUsed: true })
     } catch (error) {
       const action = { type: "DISPLAY_NOTIFICATION", notificationText: i18n.t("global.error") }
       this.props.dispatch(action)
@@ -131,7 +132,6 @@ class TabMapScreen extends Component {
   }
 
   addLocation(): void {
-
     const action = { type: "DISPLAY_NOTIFICATION", notificationText: i18n.t("global.moreThan2NotWorkingYet") }
     this.props.dispatch(action)
     /* const locations = [ ...this.state.locations ]
@@ -147,15 +147,28 @@ class TabMapScreen extends Component {
   }
 
   selectLocation(location: Object, index: Number): void {
+    let isUserGPSLocationUsed = JSON.parse(JSON.stringify(this.state.isUserGPSLocationUsed))
     const locations = [ ...this.state.locations ]
     locations[index] = location
-    this.setState({ locations: locations })
+
+    if (index === 0) {
+      isUserGPSLocationUsed = false
+    }
+    this.setState({ locations: locations, isUserGPSLocationUsed: isUserGPSLocationUsed })
   }
 
   clearLocation(index): void {
+    const isUserGPSLocationUsed = JSON.parse(JSON.stringify(this.state.isUserGPSLocationUsed))
     const locations = [ ...this.state.locations ]
     locations[index] = INITIAL_STATE.locations[index]
-    this.setState({ locations: locations })
+    this.setState({ locations: locations, isUserGPSLocationUsed: index === 0 ? false : isUserGPSLocationUsed  })
+  }
+
+  searchBarPlaceHolder(index): string {
+    if (index === 0) {
+       return this.state.isUserGPSLocationUsed ?  i18n.t('TabMapScreen.currentLocationUsed') : i18n.t('TabMapScreen.myPosition')
+    }
+    return i18n.t('TabMapScreen.positionNumber', { positionNumber: index })
   }
 
   onSearchButtonPress(): void {
@@ -233,11 +246,12 @@ class TabMapScreen extends Component {
                                   handleSearch={ this.handleSearch.bind(this) }
                                   clearLocation={ this.clearLocation.bind(this) }
                                   selectLocation={ this.selectLocation.bind(this) }
-                                  placeholder={ index === 0 ? i18n.t('TabMapScreen.myPosition') : i18n.t('TabMapScreen.positionNumber', { positionNumber: index }) }
+                                  placeholder={ this.searchBarPlaceHolder(index) }
                                   isLastSearchBar={ index === locations.length - 1 }
                                   value={ location.searchValue }
                                   options={ location.options }
                                   locationIndex={ index }
+                                  isGPSUsed = { index === 0 && this.state.isUserGPSLocationUsed }
                                   key={ index }
                                   containerStyle={[{ zIndex: locations.length - index }, styles.searchBar]}
                               />
@@ -315,7 +329,7 @@ class TabMapScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state): Object => {
   return {
     bars: state.bars
   }

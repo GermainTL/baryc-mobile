@@ -7,6 +7,7 @@
     "title": "Let's find a bar !",
     "yourPosition": "My position \uD83D\uDCCD",
     "positionNumber": "Position friend N°%{positionNumber} \uD83D\uDCCD",
+    "currentLocationUsed": "GPS location used",
     "addFriend": "Add a friend",
     "search": "Find a bar halfway",
     "travelTime": "Travel time",

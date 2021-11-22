@@ -4,16 +4,35 @@ import { Image, StyleSheet } from "react-native";
 import palette from "~/constants/Colors.ts";
 import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getArrayDepth, polygonDepth, multiPolygonDepth } from "~/helpers/CoordinatesHelper";
+import { getMarkersFromLocations } from "~/helpers/MarkersHelper.tsx";
+
 const markerImage = require('~/assets/images/marker.png');
+const beerImage = require('~/assets/images/beer.png');
 
 export default class Map extends Component {
     render(): JSX.Element {
+
+        const usersLocationMarkers = getMarkersFromLocations(this.props.locations)
+        console.log("passing here :", usersLocationMarkers)
         return (
             <MapView
                 style={ styles.map }
                 initialRegion={ parisLocalization }
                 showsUserLocation={ true }
             >
+            {
+                usersLocationMarkers.map((marker) => {
+                    return (
+                        <Marker
+                            coordinate={ marker.coordinates }
+                            key={ marker.key }
+
+                        >
+                            <Image source={ beerImage } style={{ height: 20, width: 20 }}/>
+                        </Marker>
+                    )
+                })
+            }
             {
                 this.props.isLoading === false && (
                     this.props.markers.map((marker) => {

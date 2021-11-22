@@ -2,7 +2,8 @@ import React, { Component, useContext } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView, Text } from 'react-native';
 import Dash from 'react-native-dash';
 import { Icon, ButtonGroup, Button, Slider } from "react-native-elements";
-import { getBarsFromApi, getMarkersFromBars } from "~/helpers/API/BarsAPI.tsx";
+import { getBarsFromApi } from "~/helpers/API/BarsAPI.tsx";
+import { getMarkersFromBars } from "~/helpers/MarkersHelper.tsx";
 import { geocode } from "~/helpers/API/Geocoder.tsx";
 import transportOptions from "~/constants/TransportOptions.tsx"
 import SearchBarWithOptions from "~/components/SearchBarWithOptions.tsx";
@@ -190,7 +191,6 @@ class TabMapScreen extends Component {
 
   render(): JSX.Element {
     const { markers, isLoading, showSearchPanel, selectedTransport, locations, isochronesCoordinates, intersection } = this.state
-
     return (
         <View style={ styles.container }>
           <BarycLoader visible={ isLoading } containerStyle={ styles.loaderContainer } type={ 'rotating' } />
@@ -202,6 +202,8 @@ class TabMapScreen extends Component {
               isochronesCoordinates={ isochronesCoordinates }
               intersection={ intersection }
               navigation={ this.props.navigation }
+              locations={ locations }
+              key={ JSON.stringify(locations) }
             />
           }
           <TouchableOpacity

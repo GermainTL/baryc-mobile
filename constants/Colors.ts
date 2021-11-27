@@ -33,18 +33,22 @@ export default {
     {
       fillColor: 'rgba(106, 183, 255, 0.16)',
       strokeColor: 'rgba(30, 136, 229, 0.5)',
+      userIconColor: 'rgb(30, 136, 229)',
     },
     {
       fillColor: "rgba(249, 104, 58, 0.16)",
       strokeColor: "rgba(191, 54, 12, 0.5)",
+      userIconColor: "rgb(191, 54, 12)",
     },
     {
       fillColor: "rgba(128, 226, 126, 0.16)",
       strokeColor: "rgba(76, 175, 80, 0.5)",
+      userIconColor: "rgb(76, 175, 80)",
     },
     {
       fillColor: "rgba(255, 255, 114, 0.16)",
       strokeColor: "rgba(255, 235, 59, 0.5)",
+      userIconColor: "rgb(255, 235, 59)",
     }
   ]
 };

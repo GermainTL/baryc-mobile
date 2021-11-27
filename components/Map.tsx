@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import MapView, { Marker, Polygon } from "react-native-maps";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import palette from "~/constants/Colors.ts";
 import { parisLocalization } from "~/constants/GPSConstants.ts";
 import { getArrayDepth, polygonDepth, multiPolygonDepth } from "~/helpers/CoordinatesHelper";
 import { getMarkersFromLocations } from "~/helpers/MarkersHelper.tsx";
-
+import PulsatingCircle from 'react-native-pulsating-circle';
 const markerImage = require('~/assets/images/marker.png');
-const beerImage = require('~/assets/images/beer.png');
 
 export default class Map extends Component {
     render(): JSX.Element {
 
         const usersLocationMarkers = getMarkersFromLocations(this.props.locations)
-        console.log("passing here :", usersLocationMarkers)
         return (
             <MapView
                 style={ styles.map }
@@ -21,14 +19,21 @@ export default class Map extends Component {
                 showsUserLocation={ true }
             >
             {
-                usersLocationMarkers.map((marker) => {
+                usersLocationMarkers.map((marker, index) => {
                     return (
                         <Marker
                             coordinate={ marker.coordinates }
                             key={ marker.key }
-
                         >
-                            <Image source={ beerImage } style={{ height: 20, width: 20 }}/>
+                            <PulsatingCircle
+                                mainCircleSize={ 20 }
+                                mainCircleBorder={ 4 }
+                                mainCircleColor={ "white" }
+                                pulseCircleColor={ palette.polygonColors[index].userIconColor }
+                                pulseCircleSize={ 20 }
+                            >
+                                <View style={ [styles.dot, { backgroundColor: palette.polygonColors[index].userIconColor }] }/>
+                            </PulsatingCircle>
                         </Marker>
                     )
                 })
@@ -132,5 +137,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 3,
+    },
+    dot: {
+       position: "absolute",
+        zIndex: 1000,
+        width: 15,
+        height: 15,
+        borderRadius: 7.5,
     }
 })

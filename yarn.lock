@@ -9930,6 +9930,11 @@ react-native-modal@^10.0.0:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
 
+react-native-pulsating-circle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-pulsating-circle/-/react-native-pulsating-circle-1.0.0.tgz#7edd00f257547ea480ebde2fdd3c0c022dab54b8"
+  integrity sha512-AJjTcz0AeEiL2rHwy2N1HcYA8S2OVOAE5oJcHKkddJ8MU6qVKASWcE2KDWrK7POG/UoNwuW+ukQ45/egRLW9JA==
+
 react-native-ratings@^7.3.0:
   version "7.6.1"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-7.6.1.tgz#b3d8a99a0c12fd6874f7e3c0e492089543d837c8"

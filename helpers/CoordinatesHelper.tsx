@@ -1,5 +1,7 @@
 import * as turf from "@turf/turf";
-import { getBarsFromApi, getMarkersFromBars } from "./API/BarsAPI.tsx";
+import { getBarsFromApi } from "./API/BarsAPI.tsx";
+import { getMarkersFromBars } from "~/helpers/MarkersHelper.tsx";
+
 import { getIsochronesCoordinates } from "~/helpers/API/NavitiaAPI.tsx";
 import { getIsochronesCoordinatesForCylingOrWalking } from "~/helpers/API/MapboxAPI.tsx";
 import store from "~/store/createStore.tsx";

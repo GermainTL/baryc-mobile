@@ -21,18 +21,3 @@ export async function getBarsFromApi() {
     )
     .catch((error) => console.error(error)) // TODO : errors should be displayed to user with a component conditionnaly displayed by a Redux store state variable
 }
-
-export function getMarkersFromBars(bars: any) {
-    const markers = []
-    for (const bar of bars) {
-        markers.push({
-            coordinates: {
-                longitude: bar.coordinates[0],
-                latitude: bar.coordinates[1],
-            },
-            title: bar.nom,
-            key: bar.id
-        })
-    }
-    return markers
-}

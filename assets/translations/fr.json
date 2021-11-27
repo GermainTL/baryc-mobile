@@ -7,6 +7,7 @@
     "title": "Trouvons un bar !",
     "myPosition": "Ma position \uD83D\uDCCD",
     "positionNumber": "Position ami n°%{positionNumber} \uD83D\uDCCD",
+    "currentLocationUsed": "Position GPS utilisée️",
     "addFriend": "Ajouter un ami",
     "search": "Trouver un bar à mi-chemin",
     "travelTime": "Temps de trajet",

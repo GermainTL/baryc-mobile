@@ -94,11 +94,13 @@ function retrieveNewMapElements(locations: any[], travelTime: Number, meanOfTran
                         barsInPolygonPromises.push(findBarsInPolygon(bars, newIsochroneCoordinate.coordinates))
                     }
                     Promise.all(barsInPolygonPromises).then((barsInPolygons) => {
+                        const newBarsInPolygon = []
                         for(const barsInPolygon of barsInPolygons) {
-                            newMarkers.concat(getMarkersFromBars(barsInPolygon))
+                            newBarsInPolygon.push(...barsInPolygon)
                         }
-                        const action = { type: "UPDATE_BARS", bars: barsInPolygon }
+                        const action = { type: "UPDATE_BARS", bars: newBarsInPolygon }
                         store.dispatch(action)
+                        newMarkers = getMarkersFromBars(newBarsInPolygon)
                     })
                 }
             })

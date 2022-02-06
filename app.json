@@ -15,16 +15,20 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "GermainTL",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Votre position GPS sera utilisée pour trouver les bars qui sont le plus proche entre vous et vos amis.",
         "NSAllowsArbitraryLoads": false,
-        "LSApplicationQueriesSchemes": ["comgooglemaps", "citymapper", "uber", "map", "geo"]
+        "LSApplicationQueriesSchemes": [
+          "comgooglemaps",
+          "citymapper",
+          "uber",
+          "map",
+          "geo"
+        ]
       }
     },
     "android": {
@@ -32,10 +36,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ]
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

@@ -9,8 +9,12 @@ import TabMapScreen from '~/screens/TabMapScreen';
 import TabBarsScreen from '~/screens/TabBarsScreen';
 import TabBarScreen from '~/screens/TabBarScreen';
 
-import { BottomTabParamList, TabMapParamList, TabBarsParamList } from '../types';
-import { Icon } from "react-native-elements";
+import {
+  BottomTabParamList,
+  TabMapParamList,
+  TabBarsParamList,
+} from '../types';
+import { Icon } from 'react-native-elements';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -20,19 +24,24 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="Map"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+    >
       <BottomTab.Screen
         name="Map"
         component={TabMapNavigator}
         options={{
-          tabBarIcon: ({ color }) =>  <Icon name='map-outline' type='ionicon' color={color}/>
+          tabBarIcon: ({ color }) => (
+            <Icon name="map-outline" type="ionicon" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
         name="Bars"
         component={TabBarsNavigator}
         options={{
-          tabBarIcon: ({ color }) => <Icon name='beer-outline' type='ionicon' color={color}/>,
+          tabBarIcon: ({ color }) => (
+            <Icon name="beer-outline" type="ionicon" color={color} />
+          ),
         }}
       />
     </BottomTab.Navigator>
@@ -41,7 +50,10 @@ export default function BottomTabNavigator() {
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']; color: string }) {
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof Ionicons>['name'];
+  color: string;
+}) {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
@@ -51,15 +63,9 @@ const TabMapStack = createStackNavigator<TabMapParamList>();
 
 function TabMapNavigator() {
   return (
-    <TabMapStack.Navigator screenOptions={{ headerShown: false }} >
-      <TabMapStack.Screen
-        name="TabMapScreen"
-        component={TabMapScreen}
-      />
-      <TabBarsStack.Screen
-        name="Bar"
-        component={TabBarScreen}
-       />
+    <TabMapStack.Navigator screenOptions={{ headerShown: false }}>
+      <TabMapStack.Screen name="TabMapScreen" component={TabMapScreen} />
+      <TabBarsStack.Screen name="Bar" component={TabBarScreen} />
     </TabMapStack.Navigator>
   );
 }
@@ -69,14 +75,8 @@ const TabBarsStack = createStackNavigator<TabBarsParamList>();
 function TabBarsNavigator() {
   return (
     <TabBarsStack.Navigator screenOptions={{ headerShown: false }}>
-      <TabBarsStack.Screen
-        name="TabBarsScreen"
-        component={TabBarsScreen}
-      />
-      <TabBarsStack.Screen
-        name="Bar"
-        component={TabBarScreen}
-      />
+      <TabBarsStack.Screen name="TabBarsScreen" component={TabBarsScreen} />
+      <TabBarsStack.Screen name="Bar" component={TabBarScreen} />
     </TabBarsStack.Navigator>
   );
 }

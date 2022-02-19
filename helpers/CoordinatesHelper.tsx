@@ -1,7 +1,7 @@
 import * as turf from '@turf/turf';
 import { getBarsFromApi } from './API/BarsAPI.tsx';
 import { getMarkersFromBars } from '~/helpers/MarkersHelper.tsx';
-
+import { getArrayDepth, reformatCoordinates } from '~/helpers/utils.tsx';
 import { getIsochronesCoordinates } from '~/helpers/API/NavitiaAPI.tsx';
 import { getIsochronesCoordinatesForCylingOrWalking } from '~/helpers/API/MapboxAPI.tsx';
 import store from '~/store/createStore.tsx';
@@ -152,25 +152,6 @@ function retrieveNewMapElements(
   });
 }
 
-function reformatCoordinates(coordinates) {
-  for (const latLng in coordinates) {
-    if (isNaN(coordinates[latLng][0])) {
-      reformatCoordinates(coordinates[latLng]);
-    } else {
-      coordinates[latLng] = {
-        latitude: coordinates[latLng][1],
-        longitude: coordinates[latLng][0],
-      };
-    }
-  }
-
-  return coordinates;
-}
-
-function getArrayDepth(value) {
-  return Array.isArray(value) ? 1 + Math.max(...value.map(getArrayDepth)) : 0;
-}
-
 const multiPolygonDepth = 4;
 const polygonDepth = 3;
 
@@ -179,7 +160,6 @@ export {
   reformatCoordinates,
   findBarsInPolygon,
   retrieveNewMapElements,
-  getArrayDepth,
   multiPolygonDepth,
   polygonDepth,
 };

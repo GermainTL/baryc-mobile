@@ -4,10 +4,10 @@ import { Image, StyleSheet, View } from 'react-native';
 import palette from '~/constants/Colors.ts';
 import { parisLocalization } from '~/constants/GPSConstants.ts';
 import {
-  getArrayDepth,
   polygonDepth,
   multiPolygonDepth,
-} from '~/helpers/CoordinatesHelper';
+} from '~/helpers/CoordinatesHelper.tsx';
+import { getArrayDepth } from '~/helpers/utils.tsx';
 import { getMarkersFromLocations } from '~/helpers/MarkersHelper.tsx';
 import PulsatingCircle from 'react-native-pulsating-circle';
 const markerImage = require('~/assets/images/marker.png');

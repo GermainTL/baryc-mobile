@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_TOKEN_MAPBOX, HTTPS_PROTOCOL } from '@env';
-import { reformatCoordinates } from '~/helpers/CoordinatesHelper.tsx';
+import { reformatCoordinates } from '~/helpers/utils.tsx';
 
 async function getIsochroneCoordinates(
   minutes: Number,

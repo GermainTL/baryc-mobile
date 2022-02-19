@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_TOKEN_NAVITIA, HTTPS_PROTOCOL } from '@env';
-import { reformatCoordinates } from '~/helpers/CoordinatesHelper.tsx';
+import { reformatCoordinates } from '~/helpers/utils.tsx';
 
 async function getIsochroneCoordinates(minutes: Number, coordinates: Object) {
   const urlNavitia = `${HTTPS_PROTOCOL}api.navitia.io/v1/coverage/fr-idf/isochrones?from=${

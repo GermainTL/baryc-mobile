@@ -64,12 +64,12 @@ class TabMapScreen extends Component {
 
   async componentDidMount(): void {
     if (this.props.bars === null) {
-      const bars = await getBarsFromApi()
-        const markers = getMarkersFromBars(bars);
-        this.setState({
-          markers: markers,
-          isLoading: false,
-        });
+      const bars = await getBarsFromApi();
+      const markers = getMarkersFromBars(bars);
+      this.setState({
+        markers: markers,
+        isLoading: false,
+      });
     } else {
       const markers = getMarkersFromBars(this.props.bars);
       this.setState({

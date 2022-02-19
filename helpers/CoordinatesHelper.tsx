@@ -76,54 +76,41 @@ function findBarsInPolygon(
   });
 }
 
-function retrieveNewMapElements(
+async function retrieveNewMapElements(
   locations: any[],
   travelTime: Number,
   meanOfTransport: String,
 ): Promise {
-  return new Promise(resolve => {
     let newIntersection = null;
     let newIsochronesCoordinates = [];
     let newMarkers = [];
 
-    let isochroneCoordinatePromises = null;
     const shouldUseMapbox = ['cycling', 'walking'].includes(meanOfTransport);
+    let isochronesCoordinates = [];
     if (shouldUseMapbox) {
-      isochroneCoordinatePromises = getIsochronesCoordinatesForCylingOrWalking(
+      isochronesCoordinates  = await getIsochronesCoordinatesForCylingOrWalking(
         locations,
         travelTime,
         meanOfTransport,
       );
     } else {
-      isochroneCoordinatePromises = getIsochronesCoordinates(
+      isochronesCoordinates = await getIsochronesCoordinates(
         locations,
         travelTime,
         meanOfTransport,
       );
     }
-    isochroneCoordinatePromises
-      .then(isochronesCoordinates => {
         newIsochronesCoordinates = isochronesCoordinates;
         if (newIsochronesCoordinates.length > 1) {
-          getIntersection(newIsochronesCoordinates).then(
-            (intersection: any[] | null) => {
-              newIntersection = intersection;
-            },
-          );
+          newIntersection = await getIntersection(newIsochronesCoordinates)
         }
-      })
-      .then(() => {
-        return getBarsFromApi();
-      })
-      .then(bars => {
+
+         const bars = await getBarsFromApi();
         if (newIntersection) {
-          findBarsInPolygon(bars, newIntersection.coordinates).then(
-            barsInPolygon => {
-              const action = { type: 'UPDATE_BARS', bars: barsInPolygon };
-              store.dispatch(action);
-              newMarkers = getMarkersFromBars(barsInPolygon);
-            },
-          );
+          const barsInPolygon = await findBarsInPolygon(bars, newIntersection.coordinates)
+          const action = { type: 'UPDATE_BARS', bars: barsInPolygon };
+          store.dispatch(action);
+          newMarkers = getMarkersFromBars(barsInPolygon);
         } else {
           const barsInPolygonPromises = [];
           for (const newIsochroneCoordinate of newIsochronesCoordinates) {
@@ -131,25 +118,22 @@ function retrieveNewMapElements(
               findBarsInPolygon(bars, newIsochroneCoordinate.coordinates),
             );
           }
-          Promise.all(barsInPolygonPromises).then(barsInPolygons => {
-            const newBarsInPolygon = [];
-            for (const barsInPolygon of barsInPolygons) {
-              newBarsInPolygon.push(...barsInPolygon);
-            }
-            const action = { type: 'UPDATE_BARS', bars: newBarsInPolygon };
-            store.dispatch(action);
-            newMarkers = getMarkersFromBars(newBarsInPolygon);
-          });
+
+          const barsInPolygons = await Promise.all(barsInPolygonPromises);
+          const newBarsInPolygon = [];
+          for (const barsInPolygon of barsInPolygons) {
+            newBarsInPolygon.push(...barsInPolygon);
+          }
+          const action = { type: 'UPDATE_BARS', bars: newBarsInPolygon };
+          store.dispatch(action);
+          newMarkers = getMarkersFromBars(newBarsInPolygon);
         }
-      })
-      .then(() => {
-        resolve({
+
+        return {
           newIsochronesCoordinates: newIsochronesCoordinates,
           newIntersection: newIntersection,
           newMarkers: newMarkers,
-        });
-      });
-  });
+        }
 }
 
 const multiPolygonDepth = 4;

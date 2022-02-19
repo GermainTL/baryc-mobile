@@ -64,13 +64,12 @@ class TabMapScreen extends Component {
 
   async componentDidMount(): void {
     if (this.props.bars === null) {
-      getBarsFromApi().then(bars => {
+      const bars = await getBarsFromApi()
         const markers = getMarkersFromBars(bars);
         this.setState({
           markers: markers,
           isLoading: false,
         });
-      });
     } else {
       const markers = getMarkersFromBars(this.props.bars);
       this.setState({
@@ -86,7 +85,7 @@ class TabMapScreen extends Component {
 
     let userCoordinates = {};
     try {
-      const { status } = await Location.requestPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status == 'granted') {
         userCoordinates = await Location.getCurrentPositionAsync({
           accuracy: 5,

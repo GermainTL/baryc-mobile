@@ -40,7 +40,7 @@ class TabBarScreen extends Component {
   async openLocation(serviceName) {
     let userLocation = null;
     try {
-      const { status } = await Location.requestPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status == 'granted') {
         userLocation = await Location.getCurrentPositionAsync({ accuracy: 5 });
       }

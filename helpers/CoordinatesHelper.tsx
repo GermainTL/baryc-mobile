@@ -25,6 +25,9 @@ function getIntersection(isochronesCoordinates: any[]): Promise {
       }
     }
     const intersection = computeIntersection(turfMultiPolygons);
+    if (!intersection) {
+      resolve(null)
+    }
 
     const rawCoordinates = JSON.parse(
       JSON.stringify(intersection.geometry.coordinates),

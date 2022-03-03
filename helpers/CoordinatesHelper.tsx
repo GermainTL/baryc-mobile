@@ -114,6 +114,7 @@ async function retrieveNewMapElements(
       bars,
       newIntersection.coordinates,
     );
+
     const action = { type: 'UPDATE_BARS', bars: barsInPolygon };
     store.dispatch(action);
     newMarkers = getMarkersFromBars(barsInPolygon);

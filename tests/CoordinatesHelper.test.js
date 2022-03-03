@@ -50,7 +50,7 @@ const apiReturn = [
   ],
 ];
 
-const reformattedApiReturn = [
+const reformattedApiResponse = [
   [
     [
       {
@@ -66,5 +66,5 @@ const reformattedApiReturn = [
 ];
 
 test('reformat Api return', () => {
-  expect(reformatCoordinates(apiReturn)).toStrictEqual(reformattedApiReturn);
+  expect(reformatCoordinates(apiReturn)).toStrictEqual(reformattedApiResponse);
 });

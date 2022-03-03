@@ -25,7 +25,7 @@ function getIntersection(isochronesCoordinates: any[]): Promise {
       }
     }
     const intersection = computeIntersection(turfMultiPolygons);
-    if (!intersection) {
+    if (intersection == null) {
       resolve(null)
     }
 

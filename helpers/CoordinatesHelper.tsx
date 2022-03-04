@@ -26,7 +26,7 @@ function getIntersection(isochronesCoordinates: any[]): Promise {
     }
     const intersection = computeIntersection(turfMultiPolygons);
     if (intersection == null) {
-      resolve(null)
+      resolve(null);
     }
 
     const rawCoordinates = JSON.parse(
@@ -48,7 +48,7 @@ function getIntersection(isochronesCoordinates: any[]): Promise {
 }
 
 // turfPolygon arg can be either polygon or multiPolygon
-function computeIntersection(turfPolygons: any[]) {
+function computeIntersection(turfPolygons: any[]): any {
   if (turfPolygons.length > 2) {
     turfPolygons[0] = turf.intersect(turfPolygons[0], turfPolygons[1]);
     computeIntersection(turfPolygons);
@@ -109,7 +109,7 @@ async function retrieveNewMapElements(
   }
 
   const bars = await getBarsFromApi();
-  if (newIntersection) {
+  if (newIntersection !== null) {
     const barsInPolygon = await findBarsInPolygon(
       bars,
       newIntersection.coordinates,

@@ -4,9 +4,10 @@ module.exports = {
     '@react-native-community/eslint-config',
     'standard-with-typescript',
     'eslint-config-prettier',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'react-native'],
+  plugins: ['@typescript-eslint', 'react', 'react-native', 'prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -17,6 +18,6 @@ module.exports = {
     'react-native/react-native': true,
   },
   rules: {
-    'prettier/prettier': 'off',
+    'prettier/prettier': 'error',
   },
 };
